@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Trade School — Plumbing & Auto Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:#111;color:#ddd;font-family:'Barlow',sans-serif;min-height:100vh;padding-bottom:80px;}
+
+/* NAV */
+#nav{position:fixed;bottom:0;left:0;right:0;background:#161616;border-top:2px solid #222;display:flex;z-index:100;}
+.nav-btn{flex:1;padding:10px 0 12px;background:none;border:none;color:#555;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.nav-btn.active{color:var(--accent);}
+.nav-btn span.ico{font-size:18px;}
+
+/* HEADER */
+#header{background:#161616;border-bottom:2px solid #222;padding:0;position:sticky;top:0;z-index:50;}
+.header-inner{padding:10px 16px;display:flex;align-items:center;gap:10px;}
+.logo-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:2px;line-height:1;}
+.logo-sub{font-size:10px;color:#555;letter-spacing:2px;text-transform:uppercase;}
+
+/* TRADE SWITCHER */
+.trade-bar{display:flex;border-top:1px solid #1e1e1e;overflow-x:auto;}
+.trade-bar::-webkit-scrollbar{display:none;}
+.trade-btn{flex-shrink:0;padding:8px 10px;background:none;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:1px;color:#555;display:flex;align-items:center;gap:5px;white-space:nowrap;border-bottom:3px solid transparent;transition:color 0.15s;}
+.trade-btn.active{color:#fff;background:#1a1a1a;}
+.trade-btn.active.plumb{border-bottom-color:#4a9eca;}
+.trade-btn.active.auto{border-bottom-color:#e05c1a;}
+.trade-btn.active.elec{border-bottom-color:#f0d030;}
+.trade-btn.active.niag{border-bottom-color:#30c8a0;}
+.trade-btn.active.carp{border-bottom-color:#c87941;}
+.trade-pip{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* CSS VARIABLES per trade */
+body.plumb{--accent:#4a9eca;--notes-bg:#1e1e14;--notes-border:#44440a;--notes-color:#aa9;--daily-color:#e0c03a;}
+body.auto{--accent:#e05c1a;--notes-bg:#1e1508;--notes-border:#55330a;--notes-color:#c98;--daily-color:#e05c1a;}
+body.elec{--accent:#f0d030;--notes-bg:#1e1c08;--notes-border:#555208;--notes-color:#d4c840;--daily-color:#f0d030;}
+body.niag{--accent:#30c8a0;--notes-bg:#081e18;--notes-border:#0a4432;--notes-color:#50d8b0;--daily-color:#30c8a0;}
+body.carp{--accent:#c87941;--notes-bg:#1e1408;--notes-border:#553a10;--notes-color:#c8a060;--daily-color:#c87941;}
+
+/* TABS */
+.tab{display:none;padding:16px;}
+.tab.active{display:block;}
+
+/* CARDS */
+.card{background:#181818;border:1px solid #2a2a2a;border-radius:10px;overflow:hidden;margin-bottom:12px;}
+.card-hdr{background:#1e1e1e;padding:12px 16px;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center;}
+.daily-meta{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--daily-color);letter-spacing:2px;}
+.daily-inner{display:flex;gap:14px;align-items:flex-start;padding:16px;}
+.play-btn{background:var(--accent);border:none;border-radius:10px;padding:12px 16px;color:#111;font-size:26px;cursor:pointer;flex-shrink:0;line-height:1;}
+.daily-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:#fff;line-height:1.2;}
+.daily-sub{color:#888;font-size:12px;margin-top:4px;}
+.daily-desc{color:#777;font-size:12px;margin-top:8px;line-height:1.5;}
+.btn-open{margin-top:12px;background:var(--accent);border:none;border-radius:6px;padding:10px 18px;color:#111;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:1px;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.stat-box{background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:14px 10px;text-align:center;}
+.stat-val{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;}
+.stat-lbl{color:#666;font-size:10px;margin-top:2px;letter-spacing:1px;text-transform:uppercase;}
+.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mod-card{background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:14px;cursor:pointer;}
+.mod-card-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:#ddd;margin-top:6px;line-height:1.2;}
+.prog-bar-bg{background:#222;border-radius:4px;height:5px;margin-top:10px;overflow:hidden;}
+.prog-bar{height:100%;border-radius:4px;transition:width 0.4s;}
+.filter-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.filter-lbl{color:#555;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700;}
+.filter-btn{background:#1e1e1e;border:1px solid #333;border-radius:6px;padding:6px 10px;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1px;}
+.filter-btn.active{background:var(--accent);color:#111;border-color:var(--accent);}
+.mod-hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#181818;border-radius:10px;border:1px solid #2a2a2a;cursor:pointer;margin-bottom:2px;}
+.mod-hdr.open{border-radius:10px 10px 0 0;}
+.mod-hdr-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:#fff;flex:1;}
+.lesson-list{border:1px solid #2a2a2a;border-top:none;border-radius:0 0 10px 10px;background:#151515;padding:10px;display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.lesson-card{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;}
+.lcheck{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:900;border-width:2px;border-style:solid;}
+.ltitle{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#eee;line-height:1.3;}
+.lmeta{color:#666;font-size:11px;margin-top:3px;}
+.ldesc{color:#777;font-size:11px;margin-top:5px;line-height:1.5;}
+
+/* MODAL */
+#modal{display:none;position:fixed;inset:0;background:#000e;z-index:200;align-items:center;justify-content:center;padding:12px;}
+#modal.open{display:flex;}
+.modal-inner{background:#1a1a1a;border-radius:12px;width:100%;max-width:500px;border:1px solid #333;overflow:hidden;max-height:92vh;overflow-y:auto;}
+.modal-hdr{padding:14px 16px;border-bottom:1px solid #2a2a2a;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;position:sticky;top:0;background:#1a1a1a;z-index:1;}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:#fff;line-height:1.3;flex:1;}
+.modal-close{background:none;border:none;color:#888;font-size:24px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;}
+.modal-body{padding:14px 16px;}
+.modal-dur{color:#888;font-size:12px;margin-bottom:6px;}
+.modal-badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.modal-desc{color:#aaa;font-size:13px;line-height:1.6;margin-bottom:12px;}
+.modal-notes{background:var(--notes-bg);border:1px solid var(--notes-border);border-radius:8px;padding:12px;margin-bottom:14px;}
+.modal-notes-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:var(--notes-color);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.modal-notes-body{color:#ccc;font-size:12px;line-height:1.7;}
+.modal-notes-body li{margin-left:14px;margin-bottom:4px;}
+.yt-btn{display:block;background:#FF0000;color:#fff !important;text-decoration:none;text-align:center;padding:15px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:1px;border-radius:8px;margin-bottom:10px;}
+.mark-btn{display:block;width:100%;background:#252525;border:1px solid #444;color:#aaa;text-align:center;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:1px;border-radius:8px;cursor:pointer;}
+.mark-btn.done{background:#1a3a1a;border-color:#4a7a4a;color:#7bc47f;}
+
+/* QUIZ */
+.quiz-hdr{background:#222;padding:14px 18px;border-bottom:1px solid #2a2a2a;}
+.quiz-title{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;color:var(--accent);letter-spacing:1px;}
+.quiz-sub{color:#666;font-size:12px;margin-top:2px;}
+.quiz-body{padding:16px;display:flex;flex-direction:column;gap:18px;}
+.q-text{color:#ddd;font-size:14px;font-weight:600;margin-bottom:10px;line-height:1.4;}
+.q-opt{background:#222;border:1px solid #333;border-radius:6px;padding:10px 14px;cursor:pointer;color:#bbb;font-size:13px;margin-bottom:6px;line-height:1.4;}
+.q-opt.sel{background:#252520;border-color:var(--accent);color:var(--accent);}
+.q-opt.correct{background:#1a3a1a;border-color:#4a9a4a;color:#7bc47f;}
+.q-opt.wrong{background:#3a1a1a;border-color:#9a4a4a;color:#e07b7b;}
+.sub-btn{background:var(--accent);border:none;border-radius:8px;padding:14px;color:#111;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;cursor:pointer;letter-spacing:1px;width:100%;}
+.sub-btn:disabled{background:#333;color:#555;cursor:not-allowed;}
+.result-box{text-align:center;padding:18px;border-radius:8px;}
+.result-txt{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;margin-top:8px;}
+.done-box{background:#1a2a1a;border:1px solid #4a7a4a;border-radius:10px;padding:20px;text-align:center;margin-bottom:12px;}
+.past-q{background:#181818;border:1px solid #2a2a2a;border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.badge{border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-width:1px;border-style:solid;}
+.sec-lbl{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:#444;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.overall{background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:18px;margin-bottom:12px;}
+.prog-card{background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
+.chip{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;border-width:1px;border-style:solid;cursor:pointer;}
+.reset-btn{background:none;border:1px solid #444;border-radius:8px;padding:12px;color:#666;font-size:13px;cursor:pointer;width:100%;margin-top:6px;}
+
+/* COMBINED PROGRESS */
+.combined-bar{background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:16px;margin-bottom:12px;}
+.combined-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.combined-tile{border-radius:8px;padding:14px;text-align:center;}
+</style>
+</head>
+<body class="plumb">
+
+<div id="header">
+  <div class="header-inner">
+    <span id="header-icon" style="font-size:22px">🔧</span>
+    <div style="flex:1">
+      <div class="logo-title">TRADE SCHOOL</div>
+      <div class="logo-sub" id="header-sub">FM&O Plumbing Training</div>
+    </div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#555;text-align:right;letter-spacing:1px;">COMBINED<br>PLATFORM</div>
+  </div>
+  <div class="trade-bar">
+    <button class="trade-btn plumb active" id="btn-plumb" onclick="switchTrade('plumb')"><div class="trade-pip" style="background:#4a9eca"></div>🔧 PIPE</button>
+    <button class="trade-btn auto" id="btn-auto" onclick="switchTrade('auto')"><div class="trade-pip" style="background:#e05c1a"></div>🔩 GREASE</button>
+    <button class="trade-btn elec" id="btn-elec" onclick="switchTrade('elec')"><div class="trade-pip" style="background:#f0d030"></div>⚡ ELECTRIC</button>
+    <button class="trade-btn niag" id="btn-niag" onclick="switchTrade('niag')"><div class="trade-pip" style="background:#30c8a0"></div>🖥️ NIAGARA</button>
+    <button class="trade-btn carp" id="btn-carp" onclick="switchTrade('carp')"><div class="trade-pip" style="background:#c87941"></div>🪵 CARPENTRY</button>
+  </div>
+</div>
+
+<div id="tab-home" class="tab active"></div>
+<div id="tab-learn" class="tab"></div>
+<div id="tab-quiz" class="tab"></div>
+<div id="tab-progress" class="tab"></div>
+
+<div id="modal">
+  <div class="modal-inner">
+    <div class="modal-hdr">
+      <div class="modal-title" id="modal-title"></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-dur" id="modal-dur"></div>
+      <div id="modal-badge"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div id="modal-notes"></div>
+      <a id="yt-link" href="#" target="_blank" class="yt-btn">▶ &nbsp;WATCH ON YOUTUBE</a>
+      <div id="no-video" style="display:none;background:#1e1e1e;border:1px solid #333;border-radius:8px;padding:12px;margin-bottom:10px;color:#666;font-size:12px;text-align:center;">No video — use the technical notes above</div>
+      <button id="mark-btn" class="mark-btn" onclick="markDone()">✓ &nbsp;MARK AS COMPLETE</button>
+    </div>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nav-btn active" onclick="showTab('home',this)"><span class="ico">🏠</span>HOME</button>
+  <button class="nav-btn" onclick="showTab('learn',this)"><span class="ico">📚</span>LEARN</button>
+  <button class="nav-btn" onclick="showTab('quiz',this)"><span class="ico">📝</span>QUIZ</button>
+  <button class="nav-btn" onclick="showTab('progress',this)"><span class="ico">📊</span>PROGRESS</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// PLUMBING DATA
+// ═══════════════════════════════════════════════════════════════
+const PLUMB_MODULES = [
+  { id:"p_tools", title:"Tools of the Trade", icon:"🔧", color:"#e07b39", lessons:[
+    {id:"pt1",title:"How to Use a Pipe Wrench",level:"new",dur:"8 min",desc:"Proper pipe wrench technique — Stillson design, jaw adjustment, direction of force. How to avoid rounding fittings.",vid:"IwqlSQ3iu1o"},
+    {id:"pt2",title:"How to Use a Basin Wrench",level:"new",dur:"10 min",desc:"Basin wrench use for hard-to-reach faucet nuts under sinks. Jaw orientation, T-bar leverage, tight space technique.",vid:"GvdNsPik4Ck"},
+    {id:"pt3",title:"How to Snake a Clogged Drain",level:"new",dur:"8 min",desc:"Clearing a bathtub/shower drain with a hand snake. Cable control, what to feel for, retrieval.",vid:"TpmNDrBHcno"},
+    {id:"pt4",title:"How to Use a Power Drain Auger",level:"refresher",dur:"15 min",desc:"Power auger setup and operation for kitchen waste and mainline tree roots. Cable management and safety.",vid:"ZDaJchBnFn8"},
+    {id:"pt5",title:"Snake & Auger Tool Selection",level:"refresher",dur:"12 min",desc:"Comparison of snake and auger tools for different situations. Tool selection by pipe size and clog type.",vid:"1M9yrFMDSGc"},
+    {id:"pt6",title:"Drum Auger on a Bathtub Drain",level:"new",dur:"10 min",desc:"Drum auger technique on two common bathtub blockage locations. Cable insertion, rotation speed, retrieval.",vid:"mIG2M0fJbjU"},
+  ]},
+  { id:"p_pipe", title:"Pipe Systems & Drain Install", icon:"📐", color:"#4a9eca", lessons:[
+    {id:"pp1",title:"DWV Pipe System Diagram Explained",level:"new",dur:"12 min",desc:"Drain, Waste & Vent system breakdown. How gravity drainage, trap seals, and venting work together.",vid:"f_NGL9xRfM8"},
+    {id:"pp2",title:"Installing DWV Lines — Step by Step",level:"new",dur:"20 min",desc:"Full DWV installation tutorial. ABS/PVC connections into existing systems, slope, fittings, drain stack.",vid:"qKDXvUn_jvc"},
+    {id:"pp3",title:"DWV Rough-In Time Lapse",level:"refresher",dur:"25 min",desc:"Complete basement-to-roof DWV rough-in for a whole house. Real-world pipe layout and vent stack placement.",vid:"3I2TfyoKTzE"},
+    {id:"pp4",title:"Drain Venting Fundamentals",level:"new",dur:"15 min",desc:"Why venting is required, trap siphon prevention, vent pipe sizing rules.",vid:"0FkY9HEIFcA"},
+    {id:"pp5",title:"How to Install a P-Trap",level:"new",dur:"12 min",desc:"P-trap installation on kitchen and bathroom sinks. Why S-traps fail. Trap arm length, slip joint technique.",vid:"NQMj7_8b948"},
+    {id:"pp6",title:"How to Replace a Sink P-Trap",level:"new",dur:"10 min",desc:"Replacing an old ABS fixed P-trap with adjustable PVC. Transition fittings, alignment to wall stub-out.",vid:"KBsb4s77zSc"},
+    {id:"pp7",title:"Hydronic Systems: Architecture",level:"refresher",dur:"15 min",desc:"Commercial facility hydronic piping systems — how chilled water and hot water distribution loops work together.",vid:"6gFd8jeXy3s"},
+  ]},
+  { id:"p_wc", title:"Water Closet Installation", icon:"🚽", color:"#7bc47f", lessons:[
+    {id:"pwc1",title:"How to Replace a Toilet Wax Ring",level:"new",dur:"10 min",desc:"Full wax ring replacement. Flange inspection, wax selection, bolt alignment, toilet seating technique.",vid:"TpmNDrBHcno"},
+    {id:"pwc2",title:"How to Snake a Clogged Toilet",level:"new",dur:"8 min",desc:"Using a closet auger to clear toilet clogs. Insertion angle, cable control, when to escalate.",vid:"-vN-ayzIJuU"},
+    {id:"pwc3",title:"Sloan Regal Flushometer — Install",level:"refresher",dur:"12 min",desc:"Installing a Sloan Regal or Royal manual flush valve on a commercial toilet or urinal.",vid:"Owi6awYTTnw"},
+    {id:"pwc4",title:"Sloan Regal — Diaphragm Repair",level:"refresher",dur:"10 min",desc:"Replacing the diaphragm in a Sloan Regal or Royal flush valve. When to replace vs rebuild.",vid:"IhBA-AZBXGc"},
+    {id:"pwc5",title:"Sloan Optima — Diaphragm Repair",level:"refresher",dur:"10 min",desc:"Replacing the diaphragm in a Sloan Optima, Solis or Ecos sensor flush valve.",vid:"bHQaC-gTYVc"},
+    {id:"pwc6",title:"Troubleshooting a Sloan Regal",level:"refresher",dur:"12 min",desc:"Systematic troubleshooting of Sloan Regal and Royal manual flush valves — running, weak flush, no flush.",vid:"Upkq8qIwD5M"},
+    {id:"pwc7",title:"Sloan Urinal Flush Valve Repair",level:"refresher",dur:"12 min",desc:"Step-by-step Sloan urinal repair — running or won't flush. Segment diaphragm kit A-43-A.",vid:"YfOp97kUw3M"},
+  ]},
+  { id:"p_sinks", title:"Sink Installation", icon:"🚰", color:"#c47bca", lessons:[
+    {id:"ps1",title:"Install Kitchen Sink, Faucet & P-Trap",level:"new",dur:"20 min",desc:"Complete kitchen sink install: drop-in mounting, basket strainer, faucet hookup, P-trap to drain stub-out.",vid:"vln5rN9rqR8"},
+    {id:"ps2",title:"Install a Plastic Kitchen P-Trap",level:"new",dur:"8 min",desc:"1-1/2\" tubular P-trap installation. Polypropylene slip joints, thread engagement, proper drain alignment.",vid:"cIonzFm3k_k"},
+    {id:"ps3",title:"Replace a Sink Trap",level:"new",dur:"8 min",desc:"When traps fail, material selection, assembly tips to prevent future leaks.",vid:"2befOMjA3ho"},
+    {id:"ps4",title:"Install a P-Trap Under Your Sink",level:"new",dur:"12 min",desc:"Step-by-step bathroom vanity P-trap install. Measuring, cutting, fitting, and testing.",vid:"VY10LER2d34"},
+    {id:"ps5",title:"Install a PVC P-Trap",level:"refresher",dur:"10 min",desc:"PVC P-trap in a bathroom sink. Purchasing the right parts, step-by-step assembly, common mistakes.",vid:"ipYaUzuwCa0"},
+    {id:"ps6",title:"Bathroom Sink Drain Piping",level:"refresher",dur:"14 min",desc:"Full bathroom sink drain piping — basket strainer, tailpiece, trap connection, wall stub-out.",vid:"OFui97xhln0"},
+  ]},
+  { id:"p_drain", title:"Drain Cleaning", icon:"🌀", color:"#e0c03a", lessons:[
+    {id:"pd1",title:"How to Snake a Clogged Drain",level:"new",dur:"5 min",desc:"Basics of using a drain snake or manual auger. What to do before snaking, technique, when to escalate.",vid:"-vN-ayzIJuU"},
+    {id:"pd2",title:"Drain Snake — Beginner Tutorial",level:"new",dur:"12 min",desc:"Full beginner drum auger tutorial. Setup, insertion into drain, rotating technique, clog retrieval, cleanup.",vid:"oo_Pi29nJ_E"},
+    {id:"pd3",title:"Don't Call a Plumber — Snake It",level:"refresher",dur:"15 min",desc:"Real clog clearing on a drain blocked for years. Pulling sludge and hair. Full process from access to cleanup.",vid:"yh7SFNCd31I"},
+    {id:"pd4",title:"Power Auger for Mainlines",level:"refresher",dur:"15 min",desc:"Power auger for kitchen food waste and mainline root removal. Cable management, rotation speed, safety.",vid:"ZDaJchBnFn8"},
+    {id:"pd5",title:"Grease Interceptor — Outdoor",level:"refresher",dur:"12 min",desc:"WSSC FOG program: how to properly clean an outdoor grease interceptor. Inspection steps, 25% rule.",vid:"ZpUUAMufhAE"},
+    {id:"pd6",title:"Grease Interceptor — Under-Sink",level:"refresher",dur:"10 min",desc:"WSSC FOG program: inspecting and cleaning an indoor under-sink grease interceptor.",vid:"XHe6mlKcQe8"},
+    {id:"pd7",title:"FOG Inspection — On-Site Walkthrough",level:"refresher",dur:"10 min",desc:"Fairfax County FOG inspector walkthrough. What inspectors look for, compliance documentation.",vid:"QHVPivf8b4Q"},
+  ]},
+  { id:"p_trouble", title:"Troubleshooting", icon:"🔍", color:"#e05555", lessons:[
+    {id:"ptr1",title:"How to Fix Low Water Pressure",level:"new",dur:"12 min",desc:"Troubleshooting low water pressure — shutoff valves, aerators, PRV adjustment, zone isolation.",vid:"TT_xbZZheSA"},
+    {id:"ptr2",title:"How to Adjust PRV Water Pressure",level:"new",dur:"10 min",desc:"Checking static pressure with a gauge and adjusting the PRV. Correct PSI range, locknut technique.",vid:"qVTvYvGMks0"},
+    {id:"ptr3",title:"How to Replace a PRV",level:"refresher",dur:"15 min",desc:"Full PRV replacement — isolating, removing old unit, installing new valve, setting pressure.",vid:"q4uQdVksSWs"},
+    {id:"ptr4",title:"Pipes Banging? PRV & Water Hammer",level:"refresher",dur:"18 min",desc:"Root cause of water hammer. PRV installation to control pressure spikes. Arrestor placement.",vid:"_dBLKHrOE98"},
+    {id:"ptr5",title:"Backflow Prevention — Types & Testing",level:"refresher",dur:"45 min",desc:"PVB, DC, RP/RPZ assemblies — what they are, how they work, how to test them.",vid:"98fHTja1y00"},
+    {id:"ptr6",title:"Test a Backflow Preventer — Watts 007",level:"refresher",dur:"20 min",desc:"Master plumber performs full annual test on a Watts 007 double check valve.",vid:"au8ZN2u5_wc"},
+    {id:"ptr7",title:"RP/RPZ Backflow — ASSE 5000 Test",level:"refresher",dur:"15 min",desc:"Field testing procedure for an ASSE 1013 RPZ backflow preventer using ASSE 5000 1-hose method.",vid:"S6gt6TPnUc8"},
+    {id:"ptr8",title:"Troubleshoot a Water Pressure Regulator",level:"refresher",dur:"10 min",desc:"Signs of a failing PRV. Diagnosing with a test gauge. When to rebuild vs replace.",vid:"In8qBepq5x4"},
+  ]},
+  { id:"p_commercial", title:"Commercial Systems", icon:"🏢", color:"#9b7fe8", lessons:[
+    {id:"pc1",title:"How a Chilled Water System Works",level:"refresher",dur:"15 min",desc:"Overview of a commercial chilled water system — chiller, CHW pumps, cooling towers, AHUs, and piping loops.",vid:"wKQ2n-OdjL0"},
+    {id:"pc2",title:"Chilled Water: Components & Terminology",level:"refresher",dur:"20 min",desc:"Chiller components, evaporator/condenser, CHW supply/return, delta-T, bypass valves, VFDs on pumps.",vid:"7GBzZAvmYB0"},
+    {id:"pc3",title:"Commercial Hydronic Systems",level:"refresher",dur:"18 min",desc:"Commercial heating and cooling hydronic architecture — primary/secondary loops, 2-way vs 3-way valves.",vid:"6gFd8jeXy3s"},
+    {id:"pc4",title:"Steam Traps — Thermostatic & F&T",level:"refresher",dur:"15 min",desc:"How thermostatic and float & thermostatic steam traps work. What happens when they fail open vs fail closed.",vid:"QD7zfDerg-U",
+      notes:["Two failure modes: OPEN (steam blows through, energy waste) and CLOSED (condensate backs up, water hammer)","Float & Thermostatic (F&T): float controls condensate discharge, thermostatic element purges air","Test method: isolate trap, feel inlet vs outlet temp. Inlet hot, outlet cold = working. Both hot = failed open","Maximo WO tip: log trap type, location, and failure mode — not just 'replaced steam trap'"]},
+    {id:"pc5",title:"Steam Trap Testing with Ultrasound",level:"refresher",dur:"12 min",desc:"Using an ultrasound detector to identify leaking or defective steam traps without removing them.",vid:"C7VB_gzWkgg"},
+    {id:"pc6",title:"Steam Trap Troubleshooting",level:"refresher",dur:"15 min",desc:"Systematic approach — lost steam, condensate flooding, energy loss. When to repair vs replace.",vid:"smjuAEZOrlk"},
+    {id:"pc7",title:"Sewage Ejector System Install",level:"refresher",dur:"20 min",desc:"Complete Zoeller sewer ejector system install — basin, pump, check valve, vent, alarm float.",vid:"rKBhSPtC3o4"},
+    {id:"pc8",title:"Ejector Pump — Float Switch Repair",level:"refresher",dur:"15 min",desc:"Diagnosing and fixing a Zoeller 212 ejector pump float switch — the most common commercial ejector failure.",vid:"aHySpEX7O14",
+      notes:["Float switch is the #1 failure point — pump runs but won't shut off, or won't start","Check valve failure = pump works but sewage flows back when pump stops","Vent pipe on ejector basin must go to atmosphere — never cap or block it (sewer gas relief)","Runtime hours on ejector pump = key Maximo data point — high runtime with low discharge = impeller wear"]},
+    {id:"pc9",title:"Sewage Pump Not Working?",level:"refresher",dur:"12 min",desc:"Real-world sewage ejection pump removal and diagnosis — common failure modes uncovered.",vid:"vDJ9kjGVGqM"},
+    {id:"pc10",title:"Backflow — Double Check Valve Test",level:"refresher",dur:"10 min",desc:"Testing a double check valve assembly (DCVA/ASSE 1015) — differential pressure test, no-flow test.",vid:"_QthrcCzJKc",
+      notes:["Double Check (DC/DCVA) — used for low-to-moderate hazard: irrigation, fire systems, general supply","Reduced Pressure (RP/RPZ) — required for high-hazard connections: chemical feeds, lab service, medical","A passing DC test: check 1 and check 2 both hold differential pressure per local water purveyor minimum (typically ≥1.0 PSI)","Failed test = device out of service until repaired and retested — document in Maximo with test report attached"]},
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// AUTO MODULES
+// ═══════════════════════════════════════════════════════════════
+const AUTO_MODULES = [
+  { id:"a_tools", title:"Hand Tools & Shop Basics", icon:"🔧", color:"#e05c1a", lessons:[
+    {id:"at1",title:"Torque Wrench — Types & Technique",level:"new",dur:"10 min",desc:"Beam vs click vs digital torque wrenches. How to set, pull, reset. Why under- and over-torque both fail fasteners.",vid:"6SkHWJQHgBE"},
+    {id:"at2",title:"Socket Set Mastery — Drives & Impact",level:"new",dur:"8 min",desc:"1/4, 3/8, 1/2 drive usage. Impact vs hand sockets — why you never use hand sockets on an impact gun.",vid:"YqgWEATLELg"},
+    {id:"at3",title:"Breaker Bar — Frozen Bolt Technique",level:"new",dur:"7 min",desc:"Breaker bar vs ratchet leverage. Correct body position to avoid injury. Penetrating oil, heat, extraction.",vid:"ZP-tNTU9bkQ"},
+    {id:"at4",title:"Snap Ring Pliers — Internal vs External",level:"refresher",dur:"6 min",desc:"Identifying internal vs external snap rings. Correct tip angle, ring compression, installation without launching.",vid:"XrAiMOL9w5M"},
+    {id:"at5",title:"Pry Bars & Trim Tools — Panel Removal",level:"new",dur:"8 min",desc:"Plastic vs metal pry bars for trim removal. Protecting surfaces. Door panels, dashboards, headliners.",vid:"lTz5ODZN1ZE"},
+    {id:"at6",title:"Wire Stripper, Crimper & Multimeter",level:"new",dur:"12 min",desc:"Selecting the right gauge, stripping without nicking, crimp terminal types, heat-shrink. Setting a multimeter.",vid:"rPyHxHpvNYk"},
+  ]},
+  { id:"a_engine", title:"Engine Fundamentals", icon:"⚙️", color:"#4a9eca", lessons:[
+    {id:"ae1",title:"How a 4-Stroke Engine Works",level:"new",dur:"10 min",desc:"Intake, compression, power, exhaust explained visually. What each stroke does, why compression ratio matters.",vid:"zA_19bHxEfU"},
+    {id:"ae2",title:"Engine Diagram — Parts & Locations",level:"new",dur:"14 min",desc:"Block, head, crankshaft, camshaft, pistons, timing chain/belt, oil galleries. Reading OEM diagrams.",vid:"5_K4h-bJDgE"},
+    {id:"ae3",title:"Oil Change — Full Procedure + Torque",level:"new",dur:"15 min",desc:"Drain plug torque, filter type selection, fill capacity, oil viscosity by climate and manufacturer spec.",vid:"0ZbpFz8EDfY",
+      notes:["Always torque the drain plug — overtorque strips aluminum pans; undertorque leaks on first drive","Oil filter: hand-tight plus 3/4 turn — never use strap wrench to tighten","Check the old filter O-ring came off — a double-gasket leak is a fire risk","Viscosity: 0W-20 is NOT interchangeable with 5W-30 — always use manufacturer spec","Warm the engine 2 min before draining — cold oil drains slowly and leaves sludge behind"]},
+    {id:"ae4",title:"Valve Clearance Check & Adjustment",level:"refresher",dur:"20 min",desc:"Why valve clearance matters. Feeler gauge technique on shim-style and rocker-style systems.",vid:"KjBbANOz5B0"},
+    {id:"ae5",title:"Compression Test — Full Procedure",level:"refresher",dur:"12 min",desc:"Cranking compression vs leak-down testing. What numbers mean — low wet vs dry, dead cylinder diagnosis.",vid:"YpFDSFxEBmI",
+      notes:["Disable fuel injection before cranking — unburned fuel contaminates oil","All cylinders should be within 10-15% of each other — one low = mechanical; all low = timing","Wet test: squirt oil into low cylinder, retest — rises = worn rings; stays same = valves or head gasket","Leak-down test: use shop air at TDC. Listen for air at intake (intake valve), exhaust (exhaust valve), or crankcase (rings)","A 20% leak-down is borderline; >30% is a rebuild or replacement decision"]},
+    {id:"ae6",title:"Timing Belt vs Chain — When to Replace",level:"refresher",dur:"18 min",desc:"Interference vs non-interference engines. Service intervals, tensioner replacement, water pump at same time.",vid:"EJfG4gxdBwI"},
+    {id:"ae7",title:"Cylinder Head & Gasket Replacement",level:"refresher",dur:"25 min",desc:"Head bolt removal pattern, head surface inspection, MLS vs composite gaskets, torque-to-yield bolts.",vid:"9dXzGW_FQCY"},
+  ]},
+  { id:"a_brakes", title:"Brake Systems", icon:"🛑", color:"#e03a3a", lessons:[
+    {id:"ab1",title:"Brake System Overview",level:"new",dur:"12 min",desc:"Master cylinder, brake lines, calipers, rotors, drums. Hydraulic force multiplication. ABS modulator.",vid:"CfEPT5r1Gng"},
+    {id:"ab2",title:"Brake Pad & Rotor Replacement",level:"new",dur:"20 min",desc:"Caliper piston compression, slide pin lubrication, pad bed-in procedure, rotor minimum thickness check.",vid:"oS09P5MFWFY",
+      notes:["Never compress caliper piston without cracking the bleeder — pushing old fluid backward contaminates ABS modulator","Slide pins must be cleaned and re-lubed — dry pins cause uneven pad wear and dragging brakes","Rotor thickness: measure with micrometer at 6 points — minimum spec is cast into the rotor hat","Bed-in procedure: 5 stops from 30mph, 3 stops from 50mph, cool completely — skip this and you get hot spots","Torque wheel lug nuts in a star pattern in two stages — never impact to final torque without torque wrench check"]},
+    {id:"ab3",title:"Brake Bleed — All 4 Methods",level:"new",dur:"15 min",desc:"Gravity, manual, pressure, and vacuum bleed. Correct sequence (farthest to nearest). DOT 3/4/5 differences.",vid:"O5xJLjpIGfY"},
+    {id:"ab4",title:"Drum Brake Rebuild",level:"refresher",dur:"20 min",desc:"Self-adjusting mechanism, leading/trailing shoe ID, spring positions, star wheel adjuster, wheel cylinder.",vid:"VJqQXX2trkc"},
+    {id:"ab5",title:"ABS — Codes & Wheel Speed Sensors",level:"refresher",dur:"15 min",desc:"Reading ABS fault codes, testing wheel speed sensors with multimeter, ring gear inspection.",vid:"o82k9sMZy58"},
+    {id:"ab6",title:"Brake Hose & Hard Line Replacement",level:"refresher",dur:"18 min",desc:"Spotting internal hose collapse, line corrosion, double flare vs bubble flare, flaring tool technique.",vid:"zBdz0Goo-FQ"},
+  ]},
+  { id:"a_suspension", title:"Suspension & Steering", icon:"🚗", color:"#7bc47f", lessons:[
+    {id:"asu1",title:"Suspension Overview — Struts, Shocks & Springs",level:"new",dur:"12 min",desc:"Strut vs shock vs coilover. What dampening does. Spring rate. How worn shocks fail — bounce, dive, roll.",vid:"7HMOoAPlXBU"},
+    {id:"asu2",title:"Strut Replacement — Spring Compressor Safety",level:"new",dur:"20 min",desc:"Spring compressor types, safety technique, top-hat orientation, strut mount inspection, torque specs.",vid:"9vSGc_UUVHQ",
+      notes:["A spring compressor failing under load is a serious injury event — inspect threads before every use","Compress the spring before removing strut — if coil lifts off upper seat during removal, you've lost control","Top hat orientation matters — mark it before removal or the wheel will point the wrong direction","After reassembly: alignment is mandatory — specs change even if strut is 'same part number'"]},
+    {id:"asu3",title:"Ball Joint Inspection & Replacement",level:"refresher",dur:"15 min",desc:"Loaded vs unloaded inspection. Dial indicator method. Press-in vs bolt-in vs riveted. Separator tools.",vid:"KMHpYz0Zno0"},
+    {id:"asu4",title:"CV Axle Diagnosis & Replacement",level:"refresher",dur:"18 min",desc:"Inner vs outer CV joint failure. Boot condition. Axle nut torque (often 130-180 ft-lbs). Snap ring seating.",vid:"wRJdEYOSNOM"},
+    {id:"asu5",title:"Tie Rod End & Steering Rack",level:"refresher",dur:"15 min",desc:"Inner vs outer tie rod ID, play testing with wheels loaded, jam nut technique, alignment implications.",vid:"YSvh9YJgFKw"},
+    {id:"asu6",title:"Wheel Bearing — Hub Assembly",level:"refresher",dur:"16 min",desc:"Generation 1/2/3 bearing types. Loaded ABS ring. Hub bolt torque, removing corroded hubs, press vs bolt-in.",vid:"FDMm1Ywc5zo"},
+  ]},
+  { id:"a_electrical", title:"Electrical & Diagnostics", icon:"⚡", color:"#e0c03a", lessons:[
+    {id:"ael1",title:"12V Automotive Electrical Basics",level:"new",dur:"12 min",desc:"Voltage, current, resistance in automotive context. Series vs parallel circuits. Chassis ground return path.",vid:"oNURMQG1weo"},
+    {id:"ael2",title:"Multimeter on a Car — Full Guide",level:"new",dur:"14 min",desc:"Voltage drop test, resistance test, current test with amp clamp. Reading live sensor data vs static tests.",vid:"6FEjBTUt_Jo",
+      notes:["Voltage drop testing is the most powerful electrical test most mechanics never learn — test the load side","A 0.5V drop across a connection is the spec — over 0.5V means resistance = heat = failure","Don't measure resistance on a live circuit — disconnect the component first or you'll get garbage readings","Battery voltage: 12.6V = fully charged; 12.0V = 50% discharged; below 11.8V = replace or retest","Always check battery and charging system before replacing an alternator — a failing battery kills alternators"]},
+    {id:"ael3",title:"OBD2 Scanner — Codes & Live Data",level:"new",dur:"10 min",desc:"Live data vs freeze frame vs pending codes. PID monitoring — MAF, O2 sensors, fuel trims, coolant temp.",vid:"JYJBIlRzFaY"},
+    {id:"ael4",title:"No-Start Diagnosis — Systematic",level:"refresher",dur:"20 min",desc:"Crank no-start vs no-crank. Fuel pressure, spark, compression in sequence. Cam/crank sensor signals.",vid:"_w0iqMjFj6s",
+      notes:["No-start tree: Does it CRANK? No → battery, starter, neutral safety switch. Yes → spark, fuel, compression","Fuel pressure: test at the rail — a pump that runs doesn't mean pressure is adequate","Spark test with inline tester — never ground a coil wire and crank; coil secondary voltage can destroy ECUs","Immobilizer: if security light stays solid after crank attempt, key programming is the issue, not fuel or spark"]},
+    {id:"ael5",title:"Alternator Testing — Output & Ripple",level:"refresher",dur:"12 min",desc:"Charging voltage spec (13.8-14.8V), ripple test with AC setting (under 0.5V AC), diode trio failure.",vid:"1WcWdlVgS8Y"},
+    {id:"ael6",title:"Oxygen Sensor & Fuel Trim Diagnosis",level:"refresher",dur:"15 min",desc:"Short term vs long term fuel trims. What +/- 10% means. Upstream vs downstream O2. Lean vs rich tree.",vid:"WknAnkAJ_AI"},
+  ]},
+  { id:"a_cooling", title:"Cooling & Fuel Systems", icon:"🌡️", color:"#4acaee", lessons:[
+    {id:"ac1",title:"How the Cooling System Works",level:"new",dur:"10 min",desc:"Coolant flow path, thermostat function, radiator construction, water pump impeller types, pressure cap.",vid:"LhiHi4kGfPs"},
+    {id:"ac2",title:"Thermostat Replacement",level:"new",dur:"12 min",desc:"Housing bolt removal, gasket vs O-ring, thermostat orientation (bleed hole up), coolant fill and bleed.",vid:"BMZS0dN3bOo"},
+    {id:"ac3",title:"Water Pump Replacement",level:"refresher",dur:"20 min",desc:"Timing belt-driven vs accessory belt-driven. Impeller wear (plastic disintegration). Coolant flush.",vid:"uCvW1JLrxd4"},
+    {id:"ac4",title:"Fuel Injector Cleaning & Testing",level:"refresher",dur:"14 min",desc:"On-car ultrasonic cleaning vs off-car bench test. Injector flow test. Stuck open vs clogged vs leaking.",vid:"2M_JJHQ0k7Y",
+      notes:["A leaking injector at rest causes hard-start after heat soak — smell raw fuel at idle warmup is the clue","Injector resistance: 12-16 ohms high-impedance; 2-5 ohms low-impedance (peak-and-hold drivers only)","GDI injectors operate at 1,500-3,000 PSI — cannot test with standard gauge; requires high-pressure kit","GDI engines accumulate carbon on intake valves — injectors clean the combustion chamber but not the intake side"]},
+    {id:"ac5",title:"Fuel Pump Diagnosis & Replacement",level:"refresher",dur:"18 min",desc:"Fuel pressure gauge test, pump current draw (amp clamp), in-tank access, EVAP vent when dropping tank.",vid:"bqILblO63tE"},
+    {id:"ac6",title:"Radiator Flush & Coolant Exchange",level:"new",dur:"10 min",desc:"Drain and fill vs full flush. Coolant type compatibility (why mixing OAT and IAT causes gel).",vid:"3FKCR2qzJwA"},
+  ]},
+  { id:"a_trans", title:"Transmission & Drivetrain", icon:"🔄", color:"#c47bca", lessons:[
+    {id:"atr1",title:"Manual Transmission — How It Works",level:"new",dur:"12 min",desc:"Input shaft, countershaft, synchronizers, shift forks. How a synchro brings two gears to same speed.",vid:"wCu9MXPnVa0"},
+    {id:"atr2",title:"Clutch Diagnosis & Replacement",level:"refresher",dur:"25 min",desc:"Slipping vs dragging vs chatter diagnosis. Flywheel resurfacing. Clutch fork, release bearing, pilot bearing.",vid:"pGAVjCGPJLo",
+      notes:["Clutch slip test: in 3rd gear at 30 mph, accelerate hard — RPM rises faster than speed = slip","Always replace: disc, pressure plate, release bearing, and pilot bearing together","Flywheel: heat cracks, hot spots, and grooves over 0.010\" deep require resurfacing or replacement","Dual-mass flywheel (DMF): cannot be resurfaced — must be replaced; cost is significant"]},
+    {id:"atr3",title:"Automatic Transmission Fluid Service",level:"new",dur:"14 min",desc:"ATF condition check (color, smell). Pan drop vs flush. Filter types. Sealed transmission fill procedure.",vid:"2HxSV59kkFg"},
+    {id:"atr4",title:"Transfer Case & Differential Service",level:"refresher",dur:"12 min",desc:"Fill plug vs drain plug location. Limited-slip additive requirement. Gear oil viscosity selection.",vid:"oR1yiZV_BF8"},
+    {id:"atr5",title:"Driveshaft — U-Joints & Carrier Bearing",level:"refresher",dur:"15 min",desc:"U-joint wear test. Press technique for caps. Phasing alignment. Two-piece driveshaft carrier bearing.",vid:"nLHzFGJHTlg"},
+  ]},
+  { id:"a_diag", title:"Advanced Diagnostics", icon:"🔍", color:"#9b7fe8", lessons:[
+    {id:"adi1",title:"Pre-Purchase Inspection — What to Check",level:"new",dur:"18 min",desc:"Systematic 60-point inspection. Frame, rust mapping, paint overspray, fluid contamination, scanner quick-scan.",vid:"fJFB5GVvh68"},
+    {id:"adi2",title:"Smoke Machine — EVAP & Vacuum Leaks",level:"refresher",dur:"12 min",desc:"Smoke machine hookup for EVAP vs intake vacuum. Leak location. Purge valve, vent valve. P0442/P0455.",vid:"ZbxoPm5BQ0o",
+      notes:["Vacuum leaks cause lean codes (P0171/P0174) and rough idle — smoke the intake before replacing O2 or MAF","EVAP leaks cause P0442 (small) or P0455 (large) — gas cap is the #1 cause; test cap seal first","Smoke pressure: 1-2 PSI for EVAP, 0.5 PSI for intake — too much forces smoke past seals that wouldn't leak normally","After EVAP repair: two complete drive cycles required to complete EVAP monitor before emissions testing"]},
+    {id:"adi3",title:"Scan Tool Live Data — Engine PIDs",level:"refresher",dur:"15 min",desc:"Interpreting MAP vs MAF, injector pulse width, IAT, ECT, fuel trim correlation, knock sensor, throttle position.",vid:"FtcPJmKBirg"},
+    {id:"adi4",title:"Oscilloscope Basics for Mechanics",level:"refresher",dur:"20 min",desc:"Setup on crank/cam sensors, injector patterns, O2 waveforms, primary ignition. Signals a multimeter can't show.",vid:"2mzMTr8UBJQ"},
+    {id:"adi5",title:"Vehicle Lift & Jack Stand Safety",level:"new",dur:"8 min",desc:"Floor jack pinch weld vs frame jack points, jack stand placement, never working under floor jack only.",vid:"_kVQ5-CBNHY",
+      notes:["A floor jack is a lifting device — it is NOT a support device. Hydraulic seals fail without warning","Jack stands: rate them at HALF their listed capacity when working under the car","Pinch welds on unibody vehicles: use rubber-padded saddle or you will crack the weld seam","If the car ever shifts on the stand — get out immediately, do not try to catch it"]},
+    {id:"adi6",title:"Exhaust System Inspection & Repair",level:"new",dur:"12 min",desc:"Exhaust manifold crack diagnosis, flex pipe failure, catalytic converter efficiency test, O2 thread repair.",vid:"6ik02TcqOFg"},
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// PLUMBING QUIZZES
+// ═══════════════════════════════════════════════════════════════
+const PLUMB_QUIZZES = [
+  {week:1,topic:"Tools of the Trade",questions:[
+    {q:"What size drain cable is standard for lavatory/sink lines?",opts:["1/4 inch","3/8 inch","1/2 inch","5/8 inch"],a:0},
+    {q:"Why must you deburr copper pipe after cutting?",opts:["Aesthetics","Burrs restrict flow and damage downstream components","Code only","Corrosion only"],a:1},
+    {q:"What tool cuts 4\" cast iron in a tight space?",opts:["Reciprocating saw","Snap cutter / soil pipe cutter","Angle grinder only","PVC ratchet cutter"],a:1},
+    {q:"A basin wrench is designed for:",opts:["Cutting pipe","Reaching faucet nuts in tight spaces under sinks","Tightening drain clamps","Removing wax rings"],a:1},
+    {q:"Before hydro-jetting a drain line, you must first:",opts:["Add descaler","Camera inspect to confirm pipe condition","Flush with hot water","Increase supply pressure"],a:1},
+  ]},
+  {week:2,topic:"DWV Pipe Systems",questions:[
+    {q:"Standard drain slope for horizontal pipe?",opts:["1/8\" per foot","1/4\" per foot","1/2\" per foot","1\" per foot"],a:1},
+    {q:"Why are S-traps prohibited by code?",opts:["Too expensive","They self-siphon and lose their trap seal","They need a separate vent","Only work with PVC"],a:1},
+    {q:"Purpose of a vent in a DWV system?",opts:["Increase pressure","Allow air in so drains flow freely without siphoning traps","Prevent freezing","Connect to sewer"],a:1},
+    {q:"Minimum trap seal depth required by plumbing code?",opts:["1 inch","2 inches","3 inches","4 inches"],a:1},
+    {q:"Maximum trap arm length for a 1.5\" lavatory drain?",opts:["18 inches","30 inches","42 inches","60 inches"],a:2},
+  ]},
+  {week:3,topic:"Water Closets & Flush Valves",questions:[
+    {q:"Flange is 1/4\" below finished floor. Correct choice?",opts:["Standard wax ring","Wax ring with horn extension","Wax-free gasket only","Silicone only"],a:1},
+    {q:"ADA water closet seat height requirement?",opts:["14–16\" AFF","17–19\" AFF","20–22\" AFF","Any height OK"],a:1},
+    {q:"Minimum water supply pressure for a Sloan flush valve?",opts:["5 PSI","10 PSI","20 PSI","50 PSI"],a:2},
+    {q:"A Sloan flush valve that runs continuously most likely has:",opts:["Low supply pressure","Worn or dirty diaphragm","Cracked spud","Bad supply stop"],a:1},
+    {q:"The Sloan Optima is a:",opts:["Manual handle flush valve","Sensor-actuated electronic flush valve","Gravity tank toilet","Pressure-assist toilet"],a:1},
+  ]},
+  {week:4,topic:"Sink & Drain Cleaning",questions:[
+    {q:"Correct sealant under a basket strainer body?",opts:["Silicone caulk","Plumber's putty","Teflon tape","Pipe dope"],a:1},
+    {q:"Dishwasher high loop or air gap prevents:",opts:["Noise","Back-siphonage of dirty water into dishwasher","Slow draining","Water hammer"],a:1},
+    {q:"Grease interceptor should be pumped when grease layer reaches:",opts:["10% of capacity","25% of total depth","50% of total depth","When it backs up"],a:1},
+    {q:"Multiple fixtures slow on same floor suggests:",opts:["Individual fixture clogs","Mainline obstruction downstream","Vent failure only","Low water pressure"],a:1},
+    {q:"Max recommended cable run past last cleanout with drum machine?",opts:["10 feet","25 feet","50 feet","100 feet"],a:1},
+  ]},
+  {week:5,topic:"Backflow Prevention",questions:[
+    {q:"A Reduced Pressure (RP/RPZ) backflow preventer is required for:",opts:["Irrigation only","Low-hazard connections","High-hazard connections such as chemical feeds or lab service","Any hose bib"],a:2},
+    {q:"A Double Check Valve (DCVA) passes its test when:",opts:["Water flows through freely","Both checks hold differential pressure at or above the minimum","The relief valve opens","Upstream pressure is above 80 PSI"],a:1},
+    {q:"How often must commercial backflow preventers be tested in California?",opts:["Every 5 years","Every 3 years","Annually","Only at installation"],a:2},
+    {q:"Back-siphonage backflow occurs when:",opts:["Supply pressure is too high","Negative pressure in the supply line pulls water backward","A check valve fails under high pressure","A PRV malfunctions"],a:1},
+    {q:"If a backflow device fails its annual test, the correct action is:",opts:["Note it in the log and test again next year","Take it out of service until repaired and retested","Adjust the test cocks and retest immediately","Replace the entire assembly always"],a:1},
+  ]},
+  {week:6,topic:"Commercial — Steam & Ejectors",questions:[
+    {q:"A steam trap that has FAILED OPEN will cause:",opts:["Condensate backup and water hammer","Live steam blowing through to condensate return — energy waste","The system to shut down on high pressure","No noticeable effect"],a:1},
+    {q:"A steam trap that has FAILED CLOSED will cause:",opts:["Energy waste from live steam loss","Condensate to back up in the system, risking water hammer","The boiler to short-cycle","No noticeable effect"],a:1},
+    {q:"The #1 failure point on a sewage ejector pump is:",opts:["The impeller","The motor winding","The float switch","The discharge pipe"],a:2},
+    {q:"The vent pipe on a sewage ejector basin must:",opts:["Be capped to contain odors","Terminate to atmosphere — never blocked","Connect to the building drain stack only","Be tied to the sanitary vent above the flood rim"],a:1},
+    {q:"In a chilled water system, a high delta-T indicates:",opts:["The chiller is short-cycling","The system is efficiently extracting heat from the building","A pump is oversized","The cooling tower is not functioning"],a:1},
+  ]},
+  {week:7,topic:"Troubleshooting — Pressure & Leaks",questions:[
+    {q:"To test for a hidden water leak at the meter you:",opts:["Open all fixtures","Shut all fixtures, record meter reading, wait 15 min, recheck","Increase pressure and watch for wet spots","Call leak detection immediately"],a:1},
+    {q:"Water hammer is caused by:",opts:["Undersized water heater","Sudden flow stoppage creating hydraulic shock","Air in vent stack","Low water pressure"],a:1},
+    {q:"Sewage odor at a floor drain with a dry trap — correct fix?",opts:["Replace drain body","Pour water in trap and fix the trap primer","Seal drain permanently","Hydro-jet the line"],a:1},
+    {q:"Tracing low pressure to a specific zone, check first:",opts:["Water meter","All shutoffs on that branch are fully open","PRV setting building-wide","Water heater thermostat"],a:1},
+    {q:"Floor drains require trap primers because:",opts:["They look better","Infrequent use allows seals to evaporate, letting sewer gas in","Code pressure requirement","They prevent backflow"],a:1},
+  ]},
+  {week:8,topic:"Mixed Review",questions:[
+    {q:"Standard drain slope for horizontal pipe?",opts:["1/8\" per foot","1/4\" per foot","1/2\" per foot","1\" per foot"],a:1},
+    {q:"A Sloan Regal that won't flush at all — first thing to check?",opts:["Replace the diaphragm","Verify supply stop is fully open and supply pressure is adequate","Replace the entire valve","Check the vent stack"],a:1},
+    {q:"What does the 25% rule for grease interceptors mean?",opts:["Pump when 25% of flow is grease","Pump when combined grease and solids reach 25% of total depth","Add grease treatment when 25% full","Clean inlet baffle at 25% capacity"],a:1},
+    {q:"A steam trap tested with ultrasound showing continuous loud noise is likely:",opts:["Working correctly","Failed open — passing live steam","Failed closed","Air-bound"],a:1},
+    {q:"Backflow preventer test cocks should never be opened without:",opts:["A supervisor present","A test kit attached — lines are under pressure","Shutting off the main","Draining the system first"],a:1},
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// AUTO QUIZZES
+// ═══════════════════════════════════════════════════════════════
+const AUTO_QUIZZES = [
+  {week:1,topic:"Hand Tools & Shop Safety",questions:[
+    {q:"Why should hand sockets never be used with an impact gun?",opts:["They are the wrong size","Hand sockets lack hardening for impact forces and can shatter","They are too long","Impact guns strip hand socket drives"],a:1},
+    {q:"When storing a click torque wrench, you should:",opts:["Leave it set to last torque value","Back the setting down to minimum to relieve spring tension","Store at maximum setting","Setting doesn't matter"],a:1},
+    {q:"The correct way to remove a rusted bolt is:",opts:["Apply heat first, always","Apply penetrating oil, wait, use correct breaker bar leverage","Impact gun immediately at maximum setting","Drill it out first"],a:1},
+    {q:"A multimeter set to Ohms should be used on a circuit that is:",opts:["Fully powered and running","Powered off and component disconnected","Live with key-on","Running under load"],a:1},
+    {q:"Voltage drop testing reveals:",opts:["System voltage at the battery","Resistance in a circuit by measuring loss across connections under load","Component resistance when disconnected","Fuse integrity"],a:1},
+  ]},
+  {week:2,topic:"Engine Fundamentals",questions:[
+    {q:"In a 4-stroke engine, the power stroke is which stroke?",opts:["1st (intake)","2nd (compression)","3rd (power/combustion)","4th (exhaust)"],a:2},
+    {q:"A wet compression test improving over dry indicates:",opts:["Head gasket failure","Worn piston rings","Leaking intake valves","Cracked cylinder head"],a:1},
+    {q:"Timing belt replacement on an interference engine requires also:",opts:["The alternator","The tensioner and idler pulleys — and often the water pump","Spark plugs","The oil pump"],a:1},
+    {q:"Valve clearance is checked with the piston at:",opts:["BDC on power stroke","TDC on compression stroke for that cylinder","Any position","At any position with engine off"],a:1},
+    {q:"When changing oil, double-gasket from old filter causes:",opts:["Oil pressure warning only","A double-gasket that leaks immediately and is a fire risk","Reduced filtration only","No real problem"],a:1},
+  ]},
+  {week:3,topic:"Brake Systems",questions:[
+    {q:"Before compressing a brake caliper piston, you should:",opts:["Add fluid to the reservoir","Crack open the bleeder screw to prevent backward contamination of ABS modulator","Fully depress the brake pedal","Remove the brake pads first"],a:1},
+    {q:"Brake rotor minimum thickness is:",opts:["Whatever feels right after machining","Cast into the rotor hat — measured with micrometer at multiple points","Listed only in factory manual","Only relevant for rotors over 5 years old"],a:1},
+    {q:"A brake hose with internal collapse causes:",opts:["Brake fluid leak","Brake to apply normally but fail to release — acts like a one-way valve","Complete brake failure","ABS activation on every stop"],a:1},
+    {q:"DOT 4 brake fluid vs DOT 3:",opts:["DOT 4 is thicker and incompatible","DOT 4 has higher boiling point and is backward compatible with DOT 3","DOT 3 has higher boiling point","They are identical"],a:1},
+    {q:"Brake pad bed-in procedure:",opts:["Check for squealing","Transfer an even layer of friction material to rotor and cure the binder","Make brakes feel better immediately","Satisfy warranty requirements only"],a:1},
+  ]},
+  {week:4,topic:"Suspension & Steering",questions:[
+    {q:"After replacing a strut, alignment is required because:",opts:["It is required by law only","Caster, camber, or toe change with strut geometry even if part is identical","Only if the car pulls","Only needed after tire replacement"],a:1},
+    {q:"Correct tool to safely separate a ball joint taper:",opts:["A pickle fork (always)","A ball joint press or appropriate separator — pickle fork destroys the boot","A large hammer","Any pry bar with enough leverage"],a:1},
+    {q:"A CV axle clicking on tight turns indicates:",opts:["Worn inner joint","Worn outer CV joint","Wheel bearing failure","Tie rod wear"],a:1},
+    {q:"Inner tie rod play is best detected by:",opts:["Shaking the wheel at 3 and 9 o'clock with wheel loaded","Shaking at 12 and 6 o'clock only","Visual inspection only","Scanner data only"],a:0},
+    {q:"A rumbling noise that changes pitch when changing lanes indicates:",opts:["Worn brake pads","Failing wheel bearing","Worn CV joint","Engine mount failure"],a:1},
+  ]},
+  {week:5,topic:"Electrical & OBD2",questions:[
+    {q:"Long-term fuel trim of +18% indicates:",opts:["Rich condition — injectors leaking","Lean condition — engine is adding fuel to compensate","Normal operation","Ignition misfire"],a:1},
+    {q:"Alternator ripple above 0.5V AC indicates:",opts:["Normal operation","Failed diode(s) in the rectifier bridge — battery will discharge","Overcharging","Belt slip"],a:1},
+    {q:"No-crank no-start should be diagnosed starting with:",opts:["Fuel pressure test","Battery voltage and condition, then starter circuit","Spark test","OBD2 scan first"],a:1},
+    {q:"OBD2 pending codes mean:",opts:["The check engine light has been cleared","A fault occurred once but not enough times to set a confirmed code","Codes only during certain drive cycles","Codes from a previous owner"],a:1},
+    {q:"A bad chassis ground causes:",opts:["High voltage at the battery","Multiple seemingly unrelated electrical faults throughout the vehicle","Only affects the grounded component","Blown fuses"],a:1},
+  ]},
+  {week:6,topic:"Cooling & Fuel Systems",questions:[
+    {q:"Mixing OAT and IAT coolant types causes:",opts:["No issue if diluted with water","Chemical reaction that forms gel and clogs passages","Only changes the color","Reduced freeze protection only"],a:1},
+    {q:"A GDI engine requires special consideration for:",opts:["Oil changes only","Intake valve carbon buildup — injectors don't clean the intake side","Spark plug gap only","Coolant type only"],a:1},
+    {q:"Fuel pump current draw test identifies:",opts:["Fuel pressure","A pump that is working but failing — high draw with low pressure = worn pump","Injector balance","Replace the pressure gauge"],a:1},
+    {q:"A thermostat stuck open causes:",opts:["Overheating immediately","Engine that never reaches full operating temp — poor fuel economy, poor heater output","Coolant to boil","Oil dilution"],a:1},
+    {q:"After a cooling system repair involving the system, you should:",opts:["Fill and drive immediately","Bleed the system of air pockets, check heat output and temp gauge on first drive","Only top off with water first","Never need to bleed modern systems"],a:1},
+  ]},
+  {week:7,topic:"Transmission & Drivetrain",questions:[
+    {q:"A clutch that slips under hard acceleration but releases cleanly is:",opts:["Dragging","Worn friction disc — not enough clamping force or friction material","Chattering","Normal characteristic"],a:1},
+    {q:"Automatic transmission fluid that smells burnt indicates:",opts:["Just needs a top-off","Clutch pack or band wear — internal damage has occurred; fluid change alone may not help","Normal for high-mileage","Low fluid level only"],a:1},
+    {q:"A driveshaft vibration at a specific speed that disappears above it indicates:",opts:["U-joint failure","Driveshaft balance issue — failed U-joint causes vibration at resonant frequency","Tire issue only","Transmission mount failure"],a:1},
+    {q:"Limited-slip differentials require:",opts:["Standard gear oil only","Specific friction modifier additive — without it, clutch packs chatter","No special oil","Synthetic gear oil only"],a:1},
+    {q:"Replacing a dual-mass flywheel (DMF):",opts:["Resurface it if possible","DMF cannot be resurfaced — replacement is the only correct repair","Clean and reuse if under 100k miles","Install solid flywheel conversion always"],a:1},
+  ]},
+  {week:8,topic:"Mixed Review",questions:[
+    {q:"A vehicle lifted only on a floor jack while working underneath is:",opts:["Safe if the jack is rated for weight","Immediately dangerous — jacks can fail without warning; always use jack stands","Fine for quick jobs under 10 minutes","OK if parking brake is on"],a:1},
+    {q:"EVAP P0442 (small leak) — first thing to check:",opts:["Charcoal canister replacement","Gas cap seal — #1 cause of small EVAP leaks","All fuel lines","Purge valve"],a:1},
+    {q:"After replacing an O2 sensor, readiness monitors:",opts:["Set immediately on first start","Require two complete drive cycles — vehicle cannot pass emissions until monitors complete","Are unrelated to O2 sensor replacement","Must be reset with a scanner"],a:1},
+    {q:"Voltage drop across a battery cable under starter load should be:",opts:["Less than 0.5V","Less than 2V","Any reading is normal","Exactly 12V"],a:0},
+    {q:"Before replacing a MAF sensor for a lean code, you should first:",opts:["Order the part and replace","Smoke test for vacuum leaks and inspect MAF for contamination — vacuum leaks cause the same codes","Clear codes and see if they return","Check fuel pressure only"],a:1},
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════
+// ELECTRICAL MODULES
+// ═══════════════════════════════════════════════════════════
+const ELEC_MODULES = [
+  {id:"e_safety",title:"Electrical Safety & Code",icon:"⚠️",color:"#f0d030",lessons:[
+    {id:"es1",title:"Electrical Safety — NFPA 70E",level:"new",dur:"15 min",desc:"Arc flash hazard categories, PPE requirements by incident energy level, lockout/tagout (LOTO) procedure, approach boundaries, and energized work permit requirements.",vid:"xSXaW11iTbI",
+      notes:["Arc flash at 480V can release more energy than an explosion — NEVER assume a panel is de-energized","LOTO: Lock out the source, test all three phases with a verified meter before touching anything","PPE for 480V panels: minimum CAT 2 (8 cal/cm²) arc flash suit, face shield, insulated gloves rated for voltage","All LOTO locks are personal — your lock, your key, you remove it. Never remove another person's lock","A 'hot' breaker that trips immediately = do NOT reset it and walk away — find the fault first"]},
+    {id:"es2",title:"NEC Code Basics — What Every Electrician Must Know",level:"new",dur:"18 min",desc:"National Electrical Code structure, Article 100 definitions, conductor ampacity (310), grounding vs bonding (250), box fill calculations (314), working clearances (110.26).",vid:"wnYBaxPDaHQ"},
+    {id:"es3",title:"Lockout/Tagout — Full Demonstration",level:"new",dur:"14 min",desc:"Step-by-step LOTO for electrical equipment. Identifying energy sources, applying lockout devices, testing for zero energy, restoring after work.",vid:"K0sMSEKPPME"},
+    {id:"es4",title:"Working Clearances — NEC 110.26",level:"refresher",dur:"10 min",desc:"Required working space in front of panels (3 feet minimum), headroom, dedicated electrical space, and how violations cause inspection failures.",vid:"LcBRBaVBFBg"},
+    {id:"es5",title:"OSHA Electrical Standards — 29 CFR 1910.303",level:"refresher",dur:"12 min",desc:"OSHA general industry electrical standards, guarding requirements, safe work practices, employer obligations, and common violation citations.",vid:"dPsHkBuMELg"},
+  ]},
+  {id:"e_theory",title:"Electrical Theory",icon:"🔬",color:"#c8a820",lessons:[
+    {id:"et1",title:"Ohm's Law & Power Formula — Applied",level:"new",dur:"12 min",desc:"V=IR and P=VI in real-world electrical work. Calculating wire gauge by load, breaker sizing, voltage drop over long runs. Why undersized wire is a fire hazard.",vid:"HsLLq6Rm5tQ",
+      notes:["Voltage drop on a long run: V_drop = I × R — use NEC Chapter 9 Table 9 or a calculator for runs over 50 feet","Allowable voltage drop: 3% for branch circuits, 5% total (feeder + branch) — more causes equipment damage","Wire resistance doubles when length doubles — 100-foot circuit uses 200 feet of wire (hot + neutral)","A 20A circuit on #14 wire is a code violation and a fire risk — #14 is rated 15A; #12 for 20A; #10 for 30A"]},
+    {id:"et2",title:"AC vs DC — What Matters on the Job",level:"new",dur:"10 min",desc:"Why AC alternates at 60Hz, RMS voltage explained (120V RMS = 170V peak), single-phase vs three-phase, power factor basics for motor loads.",vid:"vN9aR2wKv0U"},
+    {id:"et3",title:"Three-Phase Power — Delta vs Wye",level:"refresher",dur:"15 min",desc:"Why commercial buildings use three-phase, 208Y/120V vs 480Y/277V vs 480 Delta systems, phase-to-phase vs phase-to-neutral voltages.",vid:"quABfe4Ev3s",
+      notes:["208Y/120V: phase-to-neutral = 120V (receptacles), phase-to-phase = 208V (motors, HVAC units)","480Y/277V: phase-to-neutral = 277V (ballasts), phase-to-phase = 480V (large motors, chillers)","High-leg Delta (red leg): one leg reads ~208V to neutral — NEVER connect 120V equipment to the high leg","Unbalanced loads cause neutral current — in a perfectly balanced 3-phase system, neutral current = zero"]},
+    {id:"et4",title:"Power Factor & Commercial Buildings",level:"refresher",dur:"14 min",desc:"Leading vs lagging power factor, reactive power (kVAR), apparent vs real power (kVA vs kW), capacitor bank correction, utility power factor penalties.",vid:"Ks6RaYaEYi4"},
+    {id:"et5",title:"Voltage Drop Calculations — Long Runs",level:"refresher",dur:"12 min",desc:"NEC Chapter 9 Table 9 conductor impedance, calculating VD for single-phase and three-phase runs, upsizing conductors.",vid:"AJRb4I9Bwi0"},
+  ]},
+  {id:"e_wiring",title:"Wiring, Panels & Devices",icon:"🔌",color:"#d4a020",lessons:[
+    {id:"ew1",title:"Reading Electrical Blueprints & Schematics",level:"new",dur:"16 min",desc:"One-line diagrams, panel schedules, riser diagrams, floor plan electrical symbols. Reading shop drawings vs as-builts. Finding circuit numbers.",vid:"uSPiNIaapbo"},
+    {id:"ew2",title:"Panel Schedule & Load Calculation",level:"new",dur:"14 min",desc:"Reading a panel schedule, identifying balanced vs unbalanced phases, calculating connected vs demand load, adding circuits to existing panels.",vid:"e6fBhBDYoI8",
+      notes:["Panel schedule Phase A + B + C should be as balanced as possible — unbalance creates excess neutral current and heat","Continuous loads must not exceed 80% of the breaker's ampacity","Never add circuits to a 100% full panel — calculate available capacity first","Demand factor: you cannot assume all loads run simultaneously — NEC Article 220 demand factors apply"]},
+    {id:"ew3",title:"Sub-Panel Installation — Correct Wiring",level:"new",dur:"18 min",desc:"Why the neutral and ground are separated in a sub-panel (floating neutral), 4-wire feeder required, ground bar bonded to enclosure only.",vid:"hXzHXNLSGgc",
+      notes:["Sub-panel neutral MUST float — do NOT bond neutral to ground or you create parallel neutral paths","4-wire feeders to sub-panels (hot-hot-neutral-ground) are required","A bonded neutral in a sub-panel creates a shock hazard and can cause the main breaker to fail to trip on ground faults","Label every breaker clearly — unlabeled panels are an emergency hazard"]},
+    {id:"ew4",title:"Conductor Sizing — AWG & Ampacity",level:"new",dur:"12 min",desc:"AWG gauge system, NEC Table 310.16 ampacity, temperature correction, conduit fill, derating for bundled conductors.",vid:"4w-v8a7IZAY"},
+    {id:"ew5",title:"Conduit Types — EMT, IMC, Rigid, PVC",level:"new",dur:"18 min",desc:"EMT vs IMC vs Rigid Metal vs PVC conduit — when to use each, bending technique (90s, offsets, saddles), support spacing, pull boxes.",vid:"7QLa4BT5vvk"},
+    {id:"ew6",title:"GFCI & AFCI — Where Required by NEC",level:"new",dur:"10 min",desc:"NEC GFCI requirements (bathrooms, kitchens, garages, outdoors), AFCI requirements (bedrooms, living areas).",vid:"_gbaSjFRfxA"},
+    {id:"ew7",title:"Wire Connections — Terminals, Lugs & Splices",level:"refresher",dur:"12 min",desc:"Torque specs on terminal screws, Al vs Cu connections, anti-oxidant compound on aluminum, Marrette vs push-in connector reliability.",vid:"R_mPMmYlVOg",
+      notes:["Loose terminals are the #1 cause of electrical fires — always torque to spec, never 'tight enough'","Aluminum wiring to copper terminals: use CO/ALR rated devices and anti-oxidant compound — direct connection corrodes","Push-in connectors (backstab): never use for conductors over 14 AWG or on circuits with vibration","Torque specs are on the device label — read them. A $5 torque screwdriver prevents a $50,000 fire"]},
+  ]},
+  {id:"e_motors",title:"Motors, Controls & Low Voltage",icon:"⚡",color:"#a07810",lessons:[
+    {id:"em1",title:"Electric Motor Fundamentals — AC Induction",level:"new",dur:"14 min",desc:"How an induction motor creates torque, synchronous vs full-load speed, slip, nameplate data (HP, FLA, SF, insulation class), motor efficiency ratings.",vid:"AQqyGNOP6U8"},
+    {id:"em2",title:"Motor Starter — Contactor & Overload Relay",level:"new",dur:"16 min",desc:"Contactor operation, holding vs inrush current, overload relay setting (FLA × 1.0-1.25 for Class 10/20), auto-reset vs manual reset.",vid:"XBaGLobSmMU",
+      notes:["Set overload relay to motor FLA on the nameplate — NOT the breaker size, NOT the wire ampacity","If an overload trips immediately at startup: motor is locked rotor (seized bearing, jammed load) — DO NOT reset repeatedly","If overload trips after running: check for single-phasing (one fuse blown), high ambient temp, motor overloaded","Manual reset overloads: you MUST find and fix the fault before resetting — automatic reset on a fault causes motor damage"]},
+    {id:"em3",title:"VFD — Variable Frequency Drive Setup",level:"refresher",dur:"20 min",desc:"How a VFD converts AC to DC and back, programming basic parameters (max/min Hz, accel/decel ramp, motor FLA), bypass contactors, EMI filtering.",vid:"vFhGBFxDqmY",
+      notes:["VFD output is NOT clean sine wave — use VFD-rated cable for runs over 50 feet","Set motor FLA parameter correctly — too high = no protection; too low = nuisance trips","Never put a power factor correction capacitor on the output side of a VFD — it will destroy the VFD","VFDs generate harmonics — on sensitive systems, use a line reactor or active front end drive"]},
+    {id:"em4",title:"Motor Troubleshooting — Megohm & Vibration",level:"refresher",dur:"18 min",desc:"Megger test procedure, winding resistance balance, bearing vibration analysis, thermal imaging for hot spots.",vid:"c3tHAMGIlg4"},
+    {id:"em5",title:"Fire Alarm — Class A vs Class B Wiring",level:"new",dur:"15 min",desc:"Initiating device circuits, notification appliance circuits, Class A (supervised loop) vs Class B (T-tap), NFPA 72 requirements.",vid:"_0q8TLG-IpA",
+      notes:["Class A wiring: wire loops back to the FACP — a single open fault still allows the rest of the circuit to function","Class B wiring: T-tap style — an open fault takes out everything downstream","Smoke detector spacing: 30-foot maximum between detectors (half-space rule from walls)","A 'trouble' on the FACP must be investigated and repaired — it can mask real alarms"]},
+    {id:"em6",title:"Building Automation Control Wiring",level:"refresher",dur:"16 min",desc:"Analog output types (0-10V, 4-20mA), shielded cable requirements, RS-485 network topology, BACnet MS/TP termination resistors.",vid:"vHNJXGEfqFM",
+      notes:["0-10V: signal wire must be shielded and grounded at ONE end only (source end) — grounding both creates a ground loop","4-20mA: preferred for long runs — current loop is immune to voltage drop that corrupts 0-10V over distance","RS-485 (Modbus/BACnet MS/TP): daisy-chain topology only — no star wiring. Termination resistor (120 ohm) at each END only","BACnet address conflicts cause communication failures — each device must have a unique MAC address"]},
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════════
+// TRIDIUM / NIAGARA MODULES
+// ═══════════════════════════════════════════════════════════
+const NIAG_MODULES = [
+  {id:"n_platform",title:"Niagara Platform Fundamentals",icon:"🖥️",color:"#30c8a0",lessons:[
+    {id:"np1",title:"What is Niagara? — Framework Overview",level:"new",dur:"15 min",desc:"Tridium Niagara AX vs N4 architecture, the JACE controller as a field device aggregator, Workbench vs Supervisor vs Daemon, licensing model, and how Niagara sits between BACnet/Modbus devices and enterprise.",vid:"",
+      notes:["Niagara is middleware — it connects field protocols (BACnet, Modbus, LON) to web dashboards and enterprise systems","JACE (Java Application Control Engine): the field controller running Niagara at the edge — NOT a PC","N4 is the current version. NiagaraAX is the legacy version — NOT interchangeable","Every Niagara installation requires a valid license certificate — back it up. Without it, the JACE enters limited mode","After commissioning, change the default admin password immediately — default credentials are publicly known"]},
+    {id:"np2",title:"Workbench Navigation — Views & Wire Sheet",level:"new",dur:"18 min",desc:"Niagara Workbench interface: Nav tree, property sheet, wire sheet view, palette sidebar. Opening a station, connecting to a JACE, navigating the component hierarchy.",vid:"",
+      notes:["The Nav tree is everything — Station > Config > Drivers > Services > Modules","Wire Sheet is where you build logic — drag components from the Palette, wire outputs to inputs","Px Views are the graphical screens end users see — different from the Wire Sheet","Always save (Ctrl+S) before closing or disconnecting — unsaved changes are gone forever"]},
+    {id:"np3",title:"Stations — Commissioning & Licensing",level:"new",dur:"20 min",desc:"Creating a new station, commissioning a JACE via USB or network, uploading and activating license certificates, setting station name, time zone, NTP, and network configuration.",vid:"",
+      notes:["JACE default IP is often 192.168.1.100 — connect via USB serial first if you can't reach it on the network","Always set the correct timezone — wrong timezone means all logs and alarms are timestamp wrong","NTP time sync: connect the JACE to an NTP server — critical for alarm timestamping","License certificate is tied to the JACE hardware Host ID — document this before needing to replace a JACE"]},
+    {id:"np4",title:"Platform Daemon — Backups & Software",level:"refresher",dur:"12 min",desc:"Platform Daemon function, connecting via Workbench Platform, installing software modules (jar files), taking and restoring station backups, checking running software versions.",vid:"",
+      notes:["Platform Daemon runs below the station — even if the station crashes, Platform keeps the JACE accessible","Station backup creates a .backup file — store off the JACE immediately. If the JACE fails, you need it to rebuild","Module versions matter: always match module versions between Workbench and the JACE — mismatch causes connection failures","Keep a version log: which JACE, which Niagara version, which modules, what date — essential for future upgrades"]},
+  ]},
+  {id:"n_drivers",title:"Protocol Drivers & Device Integration",icon:"🔗",color:"#28a888",lessons:[
+    {id:"nd1",title:"BACnet Driver — IP & MS/TP Setup",level:"new",dur:"20 min",desc:"Adding the BACnet driver, configuring BACnet/IP vs BACnet MS/TP (RS-485), scanning for devices, discovering objects, and mapping points to the Niagara database.",vid:"",
+      notes:["BACnet/IP: UDP port 47808 — confirm firewall allows this between the JACE and BACnet devices","BACnet MS/TP: RS-485 serial — COM port settings must match device baud rate (9600, 19200, or 38400)","Device Instance numbers must be unique across the entire BACnet network — conflicts cause discovery failures","Poll rate: don't poll all points every 1 second — high poll rates overload MS/TP buses. Use 30-60s for status, COV for critical values"]},
+    {id:"nd2",title:"Modbus Driver — RTU & TCP Setup",level:"new",dur:"18 min",desc:"Modbus RTU (serial RS-485) vs Modbus TCP (Ethernet), configuring device nodes (unit ID / slave address), mapping registers (coils, discrete inputs, holding registers, input registers).",vid:"",
+      notes:["Modbus RTU: each device has a unique unit ID (1-247). Baud rate, parity, stop bits must all match exactly","Modbus register addressing: off-by-one errors are very common — some devices document 1-based, Niagara uses 0-based","Register types: Coil=binary output, Discrete Input=binary input, Holding Register=read/write, Input Register=read-only","Modbus TCP: unit ID is often 1 or 255 for TCP — check device documentation. Port is 502 by default","32-bit float across two registers: configure data type as Float32 in Niagara — do not treat as a 16-bit integer"]},
+    {id:"nd3",title:"SNMP Driver — Network Device Monitoring",level:"refresher",dur:"12 min",desc:"SNMP v1/v2c/v3 configuration, community strings, OID mapping, monitoring UPS, network switches, and servers through Niagara.",vid:"",
+      notes:["SNMP v1/v2c: community string is the only security — change 'public'/'private' defaults on every device","OIDs: each data point has a unique OID — use a MIB browser to find OIDs for the device type","SNMP traps: the device sends an unsolicited alert to Niagara when something fails — more efficient than constant polling"]},
+    {id:"nd4",title:"Point Discovery & Database Building",level:"new",dur:"16 min",desc:"Auto-discovery vs manual point addition, naming conventions for Niagara points, tagging points with Haystack semantic tags, building a clean and maintainable point database.",vid:"",
+      notes:["Naming convention is everything — 'AHU-01/SAT' is infinitely more useful than 'Device1/AI1'","Haystack tagging: apply 'site', 'equip', and 'point' tags to every point for analytics platform compatibility","Folder structure: Config > Equipment Type > Equipment Instance > Points — consistent structure enables future upgrades","Never delete a point while it's being used in logic, a schedule, or an alarm — you'll break things invisibly"]},
+  ]},
+  {id:"n_logic",title:"Control Logic & Programming",icon:"⚙️",color:"#208870",lessons:[
+    {id:"nl1",title:"Wire Sheet Logic — Basic Components",level:"new",dur:"18 min",desc:"KitControl module components: NumericAdd, Compare, If/Else, Switch, Min/Max, Ramp, Clamp, Scale. Building a basic PID loop and setpoint schedule in wire sheet.",vid:"",
+      notes:["Wire sheet reads left to right, top to bottom — design logic to flow in the same direction","NumericWritable vs NumericPoint: Writable has a priority array (1-16) — higher priority (lower number) wins","Always label your components — 'SupplyAirTempSensor' is far more useful than 'Numeric Input 1'","Constants: use a NumericConst for fixed values so you can find and change them later"]},
+    {id:"nl2",title:"PID Control Loop — Setup & Tuning",level:"refresher",dur:"20 min",desc:"PID component in KitControl, proportional vs integral vs derivative terms, tuning methodology, setpoint tracking, output clamping, and anti-windup.",vid:"",
+      notes:["Start with P only (I=0, D=0) — increase P until oscillation, then cut P in half","Integral (I) eliminates steady-state offset — add after P is set. Too much I causes slow oscillation","Derivative (D): rarely needed in HVAC — adds noise sensitivity","Anti-windup: if output is saturated, integral must stop accumulating — Niagara PID has this built in, enable it","Document your PID parameters — write them in the component label so they're visible at a glance"]},
+    {id:"nl3",title:"Schedules — Weekly, Special Event & Holiday",level:"new",dur:"14 min",desc:"BooleanSchedule vs NumericSchedule, configuring occupancy schedules, holiday calendars, special event overrides, how schedules interact with the priority array.",vid:"",
+      notes:["Schedules write at priority 15 — a manual override at priority 8 overrides the schedule (lower number = higher priority)","Holiday calendar: create a CalendarComponent, add dates, link it to the schedule's holiday input","Test your schedule before leaving the site — check the next scheduled change and verify it occurs correctly","A schedule with no output configured still runs — it writes null, and lower priorities take over"]},
+    {id:"nl4",title:"Alarms — Configuration, Routing & Email",level:"new",dur:"16 min",desc:"AlarmExtension on points, alarm classes, routing alarms to the alarm service, email notification setup, console acknowledgment.",vid:"",
+      notes:["Every critical point should have an alarm extension — an unmonitored point is a liability","Alarm hysteresis: set a deadband so the alarm doesn't chatter at the threshold (e.g., alarm at 85°F, clear at 82°F)","All life-safety alarms (fire, CO) should route to at minimum an email and an alarm history log","Unacknowledged alarms: configure auto-acknowledge with care — most critical alarms should require human acknowledgment"]},
+    {id:"nl5",title:"Histories — Trend Logs & Data Export",level:"refresher",dur:"12 min",desc:"HistoryExt configuration (interval vs COV logging), history database capacity, exporting to CSV, integrating with analytics platforms.",vid:"",
+      notes:["Interval logging: logs a value every N seconds regardless of change — good for slowly changing values","COV (Change of Value): logs only when value changes by more than a deadband — efficient for binary points","History capacity: calculate how many points × logging interval × retention days fit — overflow loses old data","Connect to a Supervisor or analytics platform for long-term retention and analytics"]},
+  ]},
+  {id:"n_trouble",title:"Troubleshooting & Security",icon:"🔍",color:"#108048",lessons:[
+    {id:"nt1",title:"Niagara Fault Status & Diagnostics",level:"refresher",dur:"18 min",desc:"Reading fault status on proxy points (down, failed, stale), using the Application Director logs, fox connection troubleshooting, driver restart procedures.",vid:"",
+      notes:["Proxy point status: green = OK, yellow = stale (no recent communication), red = fault or down","Stale status: the driver has not received a fresh value — check device is powered on and communicating","Fox connection (Workbench to JACE): fox:// protocol on port 1911 — firewall must allow this","Application Director: Services > AppDirector — shows all running applications, lets you restart components without rebooting","Log files: Platform > AppDaemon > Log — download and search for error messages on startup failures"]},
+    {id:"nt2",title:"BACnet & Modbus Communication Failures",level:"refresher",dur:"15 min",desc:"BACnet network diagnostics — who-is/i-am protocol, BBMD configuration for routed networks, MS/TP bus timing, duplicate device instance diagnosis.",vid:"",
+      notes:["If BACnet discovery finds no devices: check device instance range, subnet broadcast, and that UDP 47808 is not blocked","BBMD: required when BACnet/IP devices are on different subnets — one BBMD per subnet","MS/TP bus speed must be identical for all devices — one wrong device at 19200 on a 38400 bus takes down the whole bus","Duplicate device instances: two devices with the same instance causes both to respond — you see intermittent data from both"]},
+    {id:"nt3",title:"JACE Replacement — Backup & Restore",level:"refresher",dur:"20 min",desc:"Full procedure for replacing a failed JACE: retrieving old backup, new JACE commissioning, license transfer, station restore, driver reconnection, and system verification.",vid:"",
+      notes:["Before any JACE replacement: take a fresh backup if the JACE is still accessible","License transfer: licenses are tied to Host ID — contact Tridium support with old and new Host IDs","Station restore: install the same Niagara version and modules first, then restore — version mismatch causes restore failure","After restore: verify all driver connections, histories, alarms, and schedules are active","Physical wiring: photograph all terminal connections on the old JACE before removing — mistakes cost hours"]},
+    {id:"nt4",title:"Security Hardening — Niagara Best Practices",level:"refresher",dur:"14 min",desc:"User roles and permissions, changing default credentials, HTTPS enforcement, audit logs, network segmentation for BAS controllers.",vid:"",
+      notes:["Default admin/admin credentials: change immediately on every JACE — attackers scan for Niagara on port 4911/1911","Create role-based users: operator (read-only), technician (control, no configuration), engineer (full access)","Audit log: enable it — all user logins, changes, and overrides should be logged for accountability","Network segmentation: put JACEs on a dedicated BAS VLAN — limits exposure if a device is compromised","HTTPS only: disable HTTP on production JACEs — only HTTPS should be accessible from outside the BAS network"]},
+  ]},
+];
+
+
+// ═══════════════════════════════════════════════════════════
+// ELECTRICAL QUIZZES
+// ═══════════════════════════════════════════════════════════
+const ELEC_QUIZZES = [
+  {week:1,topic:"Safety & NFPA 70E",questions:[
+    {q:"Before touching any panel, you must verify it is de-energized by:",opts:["Flipping the main breaker","Testing all three phases with a verified meter after LOTO","Asking the previous technician","Checking if the lights are off"],a:1},
+    {q:"LOTO personal lock must be removed by:",opts:["The supervisor","The foreman","The person who applied it","Anyone with a master key"],a:2},
+    {q:"Minimum PPE for 480V panel work (CAT 2 arc flash):",opts:["Safety glasses only","CAT 2 arc flash suit (8 cal/cm²), face shield, and insulated gloves rated for voltage","Hard hat and gloves","Standard work clothes"],a:1},
+    {q:"Working clearance in front of a 480V panel (NEC 110.26) is:",opts:["12 inches","18 inches","3 feet minimum","5 feet minimum"],a:2},
+    {q:"A hot breaker that trips immediately means you should:",opts:["Reset it until it holds","Find and fix the fault before resetting — never repeat-reset without diagnosing the cause","Replace the breaker","Call the utility"],a:1},
+  ]},
+  {week:2,topic:"Electrical Theory",questions:[
+    {q:"A 20A circuit requires a minimum wire gauge of:",opts:["14 AWG","12 AWG","10 AWG","8 AWG"],a:1},
+    {q:"In a 208Y/120V three-phase system, the phase-to-phase voltage is:",opts:["120V","208V","240V","277V"],a:1},
+    {q:"Voltage drop on a branch circuit should not exceed:",opts:["1%","3%","5%","10%"],a:1},
+    {q:"Wire resistance on a 100-foot circuit is calculated using how many feet of wire?",opts:["100 feet","200 feet (hot + neutral)","50 feet","150 feet"],a:1},
+    {q:"A high-leg Delta system has one leg that reads approximately ___ to neutral:",opts:["120V","208V","240V","277V"],a:1},
+  ]},
+  {week:3,topic:"Panels & Wiring",questions:[
+    {q:"In a sub-panel, the neutral bar must be:",opts:["Bonded to ground (same as main panel)","Floating — isolated from ground on insulated standoffs","Connected to the enclosure","Connected with a green wire to ground"],a:1},
+    {q:"A 4-wire feeder to a sub-panel contains:",opts:["Two hots and a neutral","Two hots, a neutral, and a ground","Three hots and a ground","Three hots and a neutral"],a:1},
+    {q:"Continuous loads must not exceed ___ of the breaker's ampacity:",opts:["100%","90%","80%","70%"],a:2},
+    {q:"GFCI protection is required in which location?",opts:["Living room receptacles","Dedicated appliance circuits","Bathroom receptacles","Dedicated computer circuits"],a:2},
+    {q:"Torquing terminal screws to specification prevents:",opts:["Tripped breakers","Loose connections that cause arcing and electrical fires","Overloading","Code violations only"],a:1},
+  ]},
+  {week:4,topic:"Motors & Controls",questions:[
+    {q:"Overload relay on a motor starter should be set to:",opts:["The breaker size","The wire ampacity","The motor's FLA (full load amps) from the nameplate","1.5× the FLA"],a:2},
+    {q:"If a motor overload trips immediately at startup, this most likely indicates:",opts:["The overload is set too low","The motor is locked rotor — seized bearing or jammed load","Normal starting current","High ambient temperature"],a:1},
+    {q:"VFD output wiring differs from standard wiring because:",opts:["It requires smaller wire","VFD output has a non-sinusoidal waveform that can damage standard wire on long runs","VFD outputs are DC","No difference"],a:1},
+    {q:"A soft starter vs a VFD — which controls motor speed continuously?",opts:["Soft starter","VFD","Both","Neither"],a:1},
+    {q:"Power factor correction capacitors in commercial facilities:",opts:["Increase ampacity","Reduce reactive power and utility penalties","Protect motors from surge","Filter harmonics only"],a:1},
+  ]},
+  {week:5,topic:"Three-Phase Systems",questions:[
+    {q:"In a 480Y/277V system, the voltage between any phase and neutral is:",opts:["480V","277V","208V","120V"],a:1},
+    {q:"Unbalanced three-phase loads cause:",opts:["No effect","Neutral current — even when balanced loads would have zero neutral current","Higher phase voltage","Lower power factor only"],a:1},
+    {q:"A motor nameplated for 208-230/460V means:",opts:["Only works at 460V","Can be wired for low voltage (208-230V) or high voltage (460V) by changing connection","Requires both 208V and 460V","208V is minimum, 460V is maximum"],a:1},
+    {q:"Harmonic distortion in commercial buildings is primarily caused by:",opts:["Resistive heating loads","Non-linear loads: VFDs, UPS systems, switching power supplies","Induction motors","Fluorescent lighting only"],a:1},
+    {q:"A capacitor bank placed on the OUTPUT side of a VFD will:",opts:["Correct power factor","Destroy the VFD — capacitors and VFD outputs are incompatible","Improve motor efficiency","Reduce harmonics"],a:1},
+  ]},
+  {week:6,topic:"Low Voltage & Fire Alarm",questions:[
+    {q:"Class A fire alarm wiring differs from Class B because:",opts:["Class A uses higher voltage","Class A loops back to the panel — a single open fault still allows the rest of the circuit to function","Class A requires more wire","Class B is more reliable"],a:1},
+    {q:"Maximum smoke detector spacing is:",opts:["15 feet","20 feet","30 feet","50 feet"],a:2},
+    {q:"A 'trouble' signal on a fire alarm panel must be:",opts:["Noted in the log only","Investigated and resolved — it can mask real alarms","Silenced and cleared","Reset by the utility"],a:1},
+    {q:"RS-485 termination resistors (120 ohm) should be installed at:",opts:["Every device on the bus","The controller only","Both ends of the bus only","The middle of the bus"],a:2},
+    {q:"A 4-20mA signal is preferred over 0-10V for long cable runs because:",opts:["4-20mA uses lower voltage","Current loop is immune to voltage drop — the same current arrives at the end of a long run","4-20mA is cheaper","0-10V requires shielded cable, 4-20mA does not"],a:1},
+  ]},
+  {week:7,topic:"Conduit & NEC Code",questions:[
+    {q:"EMT conduit is appropriate for which installation?",opts:["Underground direct burial","Exposed interior commercial — not for corrosive environments or direct burial","High-vibration industrial machinery","Swimming pool equipment rooms"],a:1},
+    {q:"NEC AFCI protection is required in:",opts:["Bathrooms","Garage receptacles only","Bedroom circuits and most living area circuits","Only new construction over $500k"],a:2},
+    {q:"Conductor ampacity must be derated when:",opts:["More than 3 current-carrying conductors are bundled together","Wire is run in conduit","Wire is run horizontally","Any circuit is over 50 feet"],a:0},
+    {q:"Working clearance of 3 feet in front of a panel means:",opts:["Panel door within 3 feet of opposite wall","3 feet of open space in front of the panel face","3 feet from the nearest side wall","3 feet from floor to panel bottom"],a:1},
+    {q:"0-10V signal cable shield should be grounded at:",opts:["Both ends","The field device end only","The controller end only (source end) — grounding both creates a ground loop","Neither end"],a:2},
+  ]},
+  {week:8,topic:"Mixed Review",questions:[
+    {q:"An overload relay that trips after the motor runs for 20 minutes most likely indicates:",opts:["Normal operation","Single-phasing, overloaded motor, or high ambient temperature","Overload set too high","Motor is locked rotor"],a:1},
+    {q:"Before energizing a newly installed sub-panel, you should verify:",opts:["All breakers are off","Correct phase rotation, neutral/ground separated, and all lugs torqued","Only that the main breaker is off","That the utility is notified"],a:1},
+    {q:"VFD parameter 'motor FLA' must be set to:",opts:["The breaker size","The wire ampacity","The motor nameplate FLA exactly","1.25× the motor FLA"],a:2},
+    {q:"A neutral bonded to ground in a sub-panel creates:",opts:["Better safety","Parallel neutral current paths, shock hazard, and possible main breaker fail-to-trip","No issue — same as main panel","Only a code violation with no practical effect"],a:1},
+    {q:"Emergency lighting must provide ___ of backup power:",opts:["30 minutes","60 minutes","90 minutes","24 hours"],a:2},
+  ]},
+];
+
+
+// ═══════════════════════════════════════════════════════════
+// NIAGARA QUIZZES
+// ═══════════════════════════════════════════════════════════
+const NIAG_QUIZZES = [
+  {week:1,topic:"Niagara Platform Fundamentals",questions:[
+    {q:"What is a JACE in the Niagara ecosystem?",opts:["A graphics design application","A Java Application Control Engine — a field controller that runs Niagara at the edge","A Supervisor server for enterprise aggregation","A BACnet protocol standard"],a:1},
+    {q:"Niagara Supervisor differs from a JACE because:",opts:["Supervisor runs on field controllers","Supervisor is server software that aggregates multiple JACEs into an enterprise view","Supervisor is an older version","Supervisor handles only graphics"],a:1},
+    {q:"After commissioning a new JACE, you must immediately:",opts:["Add all drivers","Change the default admin password — default credentials are publicly known","Install all software modules","Configure all graphics"],a:1},
+    {q:"A Niagara license certificate is tied to:",opts:["The software version","The JACE hardware Host ID — if you replace the JACE, the license must be transferred","The customer name","The number of points"],a:1},
+    {q:"In Workbench, where is control logic built?",opts:["The Nav tree","The Property Sheet","The Wire Sheet","The Px Editor"],a:2},
+  ]},
+  {week:2,topic:"Protocol Drivers",questions:[
+    {q:"BACnet/IP uses which UDP port by default?",opts:["502","1911","47808","4911"],a:2},
+    {q:"BACnet MS/TP is a:",opts:["Ethernet-based protocol","RS-485 serial protocol — requires correct COM port baud rate matching","Wireless protocol","Proprietary Tridium protocol"],a:1},
+    {q:"Modbus register type 4x (Holding Register) is:",opts:["Read-only input","Binary output (coil)","Read/write analog value","Binary input"],a:2},
+    {q:"In Modbus, a common cause of data errors is:",opts:["Too many devices on the network","Off-by-one register addressing — some devices document 1-based, Niagara uses 0-based","Wrong baud rate only","Incorrect IP address"],a:1},
+    {q:"After discovering BACnet devices in Niagara, to bring points into the database you:",opts:["Restart the JACE","Drag discovered objects into the driver database to create proxy points","Export to CSV and import","Manually type in all object IDs"],a:1},
+  ]},
+  {week:3,topic:"Control Logic & Schedules",questions:[
+    {q:"In Niagara's priority array, a lower priority number means:",opts:["Lower priority — schedule wins","Higher priority — manual override at priority 8 overrides a schedule at priority 15","The value is less reliable","The point is read-only"],a:1},
+    {q:"A schedule in Niagara writes at priority:",opts:["1 (highest)","8 (operator override)","15","16 (default/fallback)"],a:2},
+    {q:"PID tuning starting point — which term should you set first?",opts:["Derivative (D)","Integral (I)","Proportional (P) only, with I and D at zero","All three simultaneously"],a:2},
+    {q:"Alarm hysteresis (deadband) prevents:",opts:["False alarms","Alarm chattering at the threshold value","Email notifications","Unacknowledged alarms"],a:1},
+    {q:"COV (Change of Value) history logging is most efficient for:",opts:["Slowly changing values like CHW supply temperature","Binary points or values with large infrequent swings","All points — always better than interval","Points logged every second"],a:1},
+  ]},
+  {week:4,topic:"Troubleshooting",questions:[
+    {q:"A proxy point with 'stale' status means:",opts:["The point has never been configured","The driver has not received a fresh value recently — check device communication","The point is in alarm","The value is outside its range"],a:1},
+    {q:"Fox protocol (Workbench to JACE) uses port:",opts:["502","47808","1911","443"],a:2},
+    {q:"If BACnet discovery finds no devices on an IP network, first check:",opts:["Replace the JACE","UDP port 47808 is not blocked, and device instance range is correct","Restart the BACnet driver","Add the devices manually"],a:1},
+    {q:"Before replacing a failed JACE, you should:",opts:["Order the replacement first","Take a fresh backup if the JACE is still accessible — last month's backup may be missing recent changes","Notify Tridium support","Disconnect all field wiring"],a:1},
+    {q:"SNMP community strings should be:",opts:["Left as 'public' and 'private' for compatibility","Changed from defaults on every device — default strings are a known security vulnerability","Only changed on internet-facing devices","Not used — SNMP is obsolete"],a:1},
+  ]},
+  {week:5,topic:"Security & Best Practices",questions:[
+    {q:"A JACE directly port-forwarded to the internet is:",opts:["Acceptable with a strong password","A serious security risk — attackers actively scan for Niagara on default ports","Required for remote access","Only a concern for older JACEs"],a:1},
+    {q:"RS-485 bus topology for BACnet MS/TP must be:",opts:["Star wiring — all devices connect to a central hub","Daisy-chain — devices connect in series with termination at each end","Ring topology","Any topology — RS-485 handles it automatically"],a:1},
+    {q:"Shield on a 0-10V signal cable should be grounded at:",opts:["Both ends","The field device end only","The controller end only (source end) — grounding both creates a ground loop","Neither end — leave shield floating"],a:2},
+    {q:"After restoring a station backup to a new JACE, you must verify:",opts:["Only that the station name is correct","All driver connections, histories, alarms, and schedules are active","Only the graphics display correctly","Only the license is active"],a:1},
+    {q:"Niagara user roles should be configured so that:",opts:["All users have admin access for convenience","Operators read-only, technicians can control but not configure, engineers have full access","Only one admin user exists","Passwords are shared between users"],a:1},
+  ]},
+  {week:6,topic:"Point Database & Naming",questions:[
+    {q:"A good Niagara point naming convention ensures:",opts:["Faster JACE performance","Points are identifiable without opening each one — essential for maintenance and upgrades","Smaller database file size","Faster BACnet discovery"],a:1},
+    {q:"Haystack semantic tags are applied to points to:",opts:["Improve performance","Enable compatibility with analytics platforms and smart building applications","Replace the point name","Restrict user access"],a:1},
+    {q:"Recommended folder structure in a Niagara station is:",opts:["Flat — all points in one folder","Config > Equipment Type > Equipment Instance > Points","Points organized by floor then room","Any structure — it doesn't affect functionality"],a:1},
+    {q:"You should never delete a Niagara point without first:",opts:["Exporting its history","Checking it is not referenced in logic, schedules, alarms, or graphics","Notifying the customer","Backing up the station"],a:1},
+    {q:"BACnet device instance numbers on a network must be:",opts:["Sequential (1, 2, 3...)","Unique across the entire BACnet network — duplicates cause discovery and communication failures","Set to match the IP last octet","Assigned by the JACE automatically"],a:1},
+  ]},
+  {week:7,topic:"Drivers Deep Dive",questions:[
+    {q:"NiagaraAX and Niagara 4 (N4) are:",opts:["Interchangeable — same platform, different name","NOT interchangeable — different architectures and module formats","N4 is just AX with a graphics update","AX is the newer version"],a:1},
+    {q:"A 4-wire Modbus RTU connection uses:",opts:["A, B, Ground, and Shield","A, B, Ground, and Power","Hot, Neutral, Ground, Shield","TX, RX, Ground, and Power"],a:0},
+    {q:"In a Niagara station, the Application Director is used to:",opts:["Design Px graphics","View and restart individual running applications without rebooting the JACE","Configure BACnet drivers","Manage user accounts"],a:1},
+    {q:"Modbus TCP device communicates on port:",opts:["47808","1911","502","4911"],a:2},
+    {q:"Station restore fails if:",opts:["The backup file is over 1MB","The Niagara version or module versions on the new JACE do not match the backup","The JACE is on a different subnet","The license was transferred before restore"],a:1},
+  ]},
+  {week:8,topic:"Mixed Review",questions:[
+    {q:"Px files in Niagara are stored as:",opts:["Binary database files","XML files","JSON configuration files","Compiled Java classes"],a:1},
+    {q:"VFD installation: why is a line reactor sometimes required?",opts:["To increase output voltage","To filter harmonics the VFD generates that can affect other equipment on the same power circuit","To reduce motor speed range","To replace the motor overload"],a:1},
+    {q:"For remote JACE access, the secure best practice is:",opts:["Port-forward port 443 to the internet","VPN to the building network, then access the JACE internally","HTTP access for simplicity","Leave default port open, rely on strong password"],a:1},
+    {q:"BACnet MS/TP devices on a bus must all use:",opts:["The same device instance range","The same baud rate — one wrong device takes down the whole bus","IP addresses","The same vendor ID"],a:1},
+    {q:"A platform-level station backup should be stored:",opts:["On the JACE only","Off the JACE immediately — if the JACE fails, you need the backup to rebuild","In the cloud only","In the Workbench project folder only"],a:1},
+  ]},
+];
+
+
+// ═══════════════════════════════════════════════════════════
+// TRADE CONFIG
+// ═══════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════
+// CARPENTRY MODULES
+// ═══════════════════════════════════════════════════════════
+const CARP_MODULES = [
+  {id:"c_tools",title:"Measuring, Layout & Hand Tools",icon:"📐",color:"#c87941",lessons:[
+    {id:"ct1",title:"How to Read a Tape Measure",level:"new",dur:"10 min",desc:"Reading fractional inches (1/8, 1/16), hook play and why it exists, inside vs outside measurements, story poles. The most important skill in carpentry — measure twice, cut once.",vid:"JBX6VkOB4Kk",
+      notes:["The tape hook slides 1/16\" on purpose — it self-adjusts for inside vs outside measurements. This is NOT a defect","Mark with a knife, not a pencil — a pencil line is 1/32\" wide; a knife line is a precise cut location","'Measure twice, cut once' means: mark it, check it on the material before cutting — not just re-reading the tape","Story pole: a straight stick with all repetitive measurements marked. Faster and more accurate than measuring each piece independently","On long rip cuts, snap a chalk line — don't try to freehand a 10-foot pencil line"]},
+    {id:"ct2",title:"Squares — Speed Square, Framing Square & Try Square",level:"new",dur:"12 min",desc:"Speed square for quick 90° and angle cuts, framing square for stair layout and rafter cuts, try square for checking stock flatness and joinery. When to use each.",vid:"e3brUkDKwGw",
+      notes:["Check your speed square for accuracy: scribe a line, flip the square, scribe again — if lines match, it's square","Framing square: the body (long leg) and tongue (short leg). Stair layout uses rise on tongue, run on body","A try square checks only 90° — a combination square adjusts to any angle and also works as a depth gauge","Never drop a metal square — even one fall can make it inaccurate. Verify after any drop with the flip test"]},
+    {id:"ct3",title:"Marking & Layout — Lines, Datums & Reference Points",level:"new",dur:"14 min",desc:"Establishing a datum (reference line), snapping chalk lines, transferring measurements with dividers, laying out multiples (stud spacing, joist spacing). Working from a single reference avoids cumulative error.",vid:"UiEAKW4KZZU",
+      notes:["Always work from one reference datum — measuring from different points accumulates error on every measurement","Stud layout: mark the first stud at 15-1/4\" so the plywood edge lands on center of the 16\" stud. Most carpenters get this wrong","Chalk line: snap with wrist, not arm — a wrist snap gives a clean thin line; arm motion lifts the line and blurs it","Crown marks: always mark the crown (bow) of lumber with an arrow before installing — install crown-up so load pushes it down"]},
+    {id:"ct4",title:"Circular Saw Mastery — Setup, Safety & Accuracy",level:"new",dur:"15 min",desc:"Blade depth setting (1/4\" below material), blade guard function, splitter/riving knife, fence vs freehand cuts, avoiding kickback — the #1 cause of circular saw injury.",vid:"_4jbFqPPjmg",
+      notes:["Set blade depth to 1/4\" below the material — deeper doesn't cut faster and exposes more blade for injury","Kickback: the blade binds and the saw rockets back toward you. Cause: blade pinched by workpiece flexing closed","Anti-kickback: support the cutoff piece so it can't pinch the blade. Never cut with the waste piece unsupported","Never reach under a running saw or behind the blade — let the blade stop completely before retrieving the cutoff","Blade guard: never remove it permanently. If it must be temporarily removed for a bevel cut, reinstall it immediately after"]},
+    {id:"ct5",title:"Miter Saw — Crosscuts, Angles & Compound Cuts",level:"new",dur:"14 min",desc:"Miter saw types (compound vs sliding), setting miter and bevel angles for crown molding and trim, coping vs mitering inside corners, saw stop position and hold-down.",vid:"7QXQVzAsLM4",
+      notes:["Always hold material firmly against the fence AND table — never cut freehand without both contact points","Coping inside corners: miter the first piece square to the wall, then cope the second piece to fit over it — copes stay tight as wood moves; miters gap","Crown molding: cut it flat on the saw table (spring angle held by the fence) at the compound angle, OR stand it at spring angle. Pick one method and be consistent","Let the blade reach full speed before lowering into the cut — a slow-starting cut causes tearout and burning","Blade kerf: always cut on the waste side of the line. The kerf removes wood — cutting on the line makes parts short"]},
+    {id:"ct6",title:"Router Basics — Profiles, Dadoes & Edge Guides",level:"refresher",dur:"16 min",desc:"Fixed vs plunge base, bit selection (straight, roundover, rabbet, flush trim), routing direction (climb cuts), template routing, edge guide for dados and grooves.",vid:"2y3CiBmAbDw",
+      notes:["Always rout against the bit rotation — feeding the wrong direction (climb cut) causes the router to pull itself forward violently","Depth of cut: no more than 1/2\" per pass on hardwood — multiple shallow passes beat one deep pass every time","Climb cuts: sometimes necessary at the start of a pass to prevent tearout at corners, but only with a very light touch","Sharp bits only — a dull router bit burns wood and requires more force, which reduces control","Template routing: secure the template solidly. If the template moves mid-cut, you've ruined the workpiece"]},
+  ]},
+  {id:"c_framing",title:"Rough Framing",icon:"🏗️",color:"#a06030",lessons:[
+    {id:"cf1",title:"Wood Framing Basics — Lumber Grades, Sizes & Spans",level:"new",dur:"14 min",desc:"Nominal vs actual lumber dimensions (2x4 is 1-1/2\" × 3-1/2\"), lumber grades (Select Structural, No.1, No.2), moisture content (KD vs green), span tables for joists and rafters.",vid:"C7nSeFTsFEM",
+      notes:["Nominal vs actual: a 2x4 is 1-1/2\" × 3-1/2\". A 2x10 is 1-1/2\" × 9-1/4\". Design to actual dimensions","KD (kiln-dried) lumber is required for most interior framing — green lumber shrinks and warps after installation","Lumber grade stamps: species, grade, moisture content, mill number. No.2 is standard for wall framing; No.1 or better for headers","Always check your local span tables — lumber species varies by region and affects what sizes are allowed for a given span","Crown up: always install joists and rafters with the crown (bow) facing up. Gravity and load will push it down over time"]},
+    {id:"cf2",title:"Wall Framing — Plates, Studs, Headers & Corners",level:"new",dur:"20 min",desc:"Bottom plate, top plate, double top plate, stud spacing (16\" and 24\" OC), rough opening sizes for doors and windows, king studs, jack studs (trimmers), cripples, corners and partition tees.",vid:"Z7bFOqSCZyo",
+      notes:["Rough opening: door RO = door width + 2\" (for frame). Window RO = window width + 2\" wide, window height + 2\" tall — verify with manufacturer","King stud runs full height. Jack stud (trimmer) supports the header. Cripple studs fill above and below the opening","Double top plate: the lap joint on the double top plate must span across wall intersections to tie the framing together","California corner vs 3-stud corner: California corner uses 2 studs + ladder blocking, saves lumber, and provides insulation backing","Header sizing: consult the span tables in the IRC or your local code — undersized headers cause sagging and door/window binding"]},
+    {id:"cf3",title:"Floor Framing — Beams, Joists, Blocking & Sheathing",level:"new",dur:"18 min",desc:"Beam sizing and bearing length, joist layout (16\" OC), rim joists, blocking at mid-span, squash blocks at point loads, subfloor sheathing installation (APA rated, glue-nail method).",vid:"6cEbTBHLQ3E",
+      notes:["Joist bearing: minimum 1-1/2\" on wood, 3\" on masonry — inadequate bearing is a structural defect","Rim joist: must be the same depth as the floor joists. Blocking fills in at the top plate to close the floor cavity","Mid-span blocking eliminates joist rotation — required when joist depth-to-thickness ratio exceeds IRC limits","Glue + nail subfloor: construction adhesive on top of each joist, then nail. This eliminates the single biggest cause of squeaky floors","Leave 1/8\" expansion gap between subfloor panels — without it, panels buckle when they swell from humidity"]},
+    {id:"cf4",title:"Roof Framing — Ridge, Common Rafters & Bird's Mouth",level:"refresher",dur:"22 min",desc:"Roof pitch (rise over run), rafter length calculation (Pythagorean or rafter tables), ridge board sizing, plumb cut, seat cut (bird's mouth), tail cut, collar ties and ridge beam difference.",vid:"O9GjNGNHF2Q",
+      notes:["Bird's mouth: the notch where the rafter sits on the top plate. Seat cut depth must not exceed 1/3 of the rafter depth — deeper weakens the rafter","Rafter length formula: unit length (from rafter tables) × total run. Or: √(rise² + run²). Both give the same answer","Ridge board vs ridge beam: a ridge board is NOT structural — the rafters push against each other and the ceiling joists act as ties. A ridge beam IS structural — it carries load and requires posts","Collar ties vs rafter ties: collar ties are in the upper third of the attic space, reduce rafter spread. Rafter ties (ceiling joists) are at the wall plate — they are structural and required by code","Overhang (tail): the rafter extends past the wall to create the eave. Tail length determines eave width"]},
+    {id:"cf5",title:"Engineered Lumber — LVL, I-Joists & Parallam",level:"refresher",dur:"14 min",desc:"Why engineered lumber is used (longer spans, dimensional stability, no crown), LVL (Laminated Veneer Lumber) for headers and beams, I-joists for floor and roof framing, PSL/Parallam for columns.",vid:"_-TqxhfNMG4",
+      notes:["LVL is stronger and more consistent than dimensional lumber — required for long-span headers over garages and wide openings","I-joist flanges are the structural element — never notch or drill through the flanges. Web holes must follow manufacturer's hole chart","Squash blocks: at any point load bearing on I-joists (post, beam above), install squash blocks to transfer load around the I-joist flange","LVL beams: multiple plies must be nailed together per the manufacturer spec — inadequate nailing means the plies act independently and fail at lower load","Store engineered lumber flat and covered — LVL twists and delaminates if left wet or stored on edge"]},
+    {id:"cf6",title:"Sheathing — Wall, Roof & Subfloor",level:"new",dur:"12 min",desc:"APA rated sheathing, OSB vs plywood (when each is appropriate), nailing schedule (6\" edge, 12\" field), shear wall nailing upgrades, H-clips for roof sheathing.",vid:"TMH5YWPz3Qo",
+      notes:["APA rating: 32/16 means rated for 32\" roof rafter span or 16\" floor joist span. Match the rating to your framing spacing","OSB vs plywood: OSB is adequate for most framing applications and cheaper. Plywood is better in wet conditions — OSB swells at edges when repeatedly wet","Shear wall nailing: standard is 6\"/12\" (edge/field). Seismic/wind upgrades may require 4\"/6\" or 3\"/3\" — this must match the shear wall schedule on the plans","H-clips between roof sheathing panels (at unsupported edges) eliminate edge bounce and are required when rafters are 24\" OC","Always nail sheathing with the panel strength axis perpendicular to supports — the long direction across the framing"]},
+  ]},
+  {id:"c_doors",title:"Doors, Windows & Stairs",icon:"🚪",color:"#8a5020",lessons:[
+    {id:"cd1",title:"Prehung Door Installation — Interior",level:"new",dur:"16 min",desc:"Rough opening prep, setting the door plumb and level in 3D, shimming the hinge side first, fastener placement, checking swing and latch before casing.",vid:"pLHbwdqMpM0",
+      notes:["Plumb and level in 3D: the door must be plumb side-to-side AND front-to-back — a twisted frame causes binding","Hinge side first: shim and fasten the hinge side plumb before touching the latch side — every door installation starts here","Reveal: the gap between the door slab and frame (door stop) should be consistent — 1/8\" all around. Uneven reveal = twisted frame","Long screws through hinge into framing: replace the short hinge screws (3/4\") with 3\" screws that reach the king stud — this prevents hinge-side sag","Never nail through the hinge side of the frame before checking swing — if the frame is out of plumb, the door won't close properly"]},
+    {id:"cd2",title:"Exterior Door Installation — Weather, Threshold & Flashing",level:"refresher",dur:"18 min",desc:"Sill pan flashing, door unit leveling, exterior sealant sequence (sides and top only — never bottom), threshold adjustment, weatherstripping types.",vid:"kpF3TjEKh_U",
+      notes:["Sill pan: a sloped pan under the door sill diverts any water that gets past the threshold to the outside. Critical — skip this and water will rot the subfloor","Never caulk the bottom of an exterior door frame — water that gets in must have a way out. Caulk sides and top only","Threshold: adjust so the door compresses the weatherstrip but doesn't drag on flooring — usually 3-5 turns of adjustment screw","Flashing integration: door flashing must lap over the WRB (weather-resistive barrier) below and under the WRB above — water management is the priority","Foam insulation around door frame: use low-expansion window and door foam only — standard expanding foam bows the frame and causes binding"]},
+    {id:"cd3",title:"Window Installation — Flanged & Brick Mold",level:"refresher",dur:"16 min",desc:"Rough opening size, sill pan flashing, flanged window installation sequence, self-adhering membrane at sill and jambs, flashing tape at head, nailing flange, checking plumb/level/square.",vid:"UBMGRMrFAiE",
+      notes:["Flashing sequence (the most critical step): sill first, then jambs overlapping sill, then head flashing over everything — water always drains down","Self-adhering membrane at the sill: must be fully adhered — any bubbles or gaps allow water to wick under the window","Shimming: shim at hinge/latch points and at each corner — check both diagonal measurements to ensure window is square (equal diagonals = square)","Nailing flange: fasten at every hole provided. Do NOT over-drive nails through the flange — cracked flange is a leak waiting to happen","Foam around window: low-expansion foam only — standard foam will bow the frame and prevent operation"]},
+    {id:"cd4",title:"Stair Layout — Rise, Run, Stringer & Code",level:"refresher",dur:"20 min",desc:"Total rise measurement, calculating number of risers (total rise ÷ 7.75\" target), adjusting rise to exact equal increments, run calculation, stringer layout with framing square, IRC stair code requirements.",vid:"bVzH_H0p5b8",
+      notes:["IRC stair code: max riser height 7-3/4\", min tread depth 10\", min width 36\". Variation between tallest and shortest riser must not exceed 3/8\"","Rise calculation: measure total rise precisely. Divide by 7.75 (target), round to nearest whole number = number of risers. Divide total rise by that number = exact riser height","The bottom riser is always 1 tread thickness shorter if treads are applied after stringer is set — beginners always forget this","Stringer notch depth: the vertical cut (riser) and horizontal cut (tread) must not leave less than 3-1/2\" of effective stringer depth — check this before cutting","Handrail: required when stair has 4 or more risers. Height 34\"–38\" measured vertically from tread nosing. Graspable profile required by code"]},
+    {id:"cd5",title:"Stair Treads & Risers — Installation & Fixing Squeaks",level:"refresher",dur:"14 min",desc:"Tread material selection, nosing overhang (1\" to 1-1/4\"), glue-nail method, installing risers before treads, squeak prevention and repair from above and below.",vid:"UxhQ6HdlHeo",
+      notes:["Glue every tread and riser contact point — construction adhesive between tread and stringer, riser and stringer, tread and riser face","Squeak causes: tread rubbing on riser, nail popping out, wood shrinkage. Fix from below: block at tread-riser joint, or drive screw through riser into tread","Nosing overhang: 1\" to 1-1/4\" by IRC. More than 1-1/4\" is a trip hazard; less than 3/4\" doesn't meet code","Treads: use hardwood or stair-grade material. Standard lumber (2x12) will crack at the nosing from foot impact over time","Pre-drill all tread fasteners — splitting a tread at installation is an expensive mistake"]},
+  ]},
+  {id:"c_finish",title:"Finish Carpentry & Trim",icon:"✏️",color:"#7a6830",lessons:[
+    {id:"cf_1",title:"Baseboard Installation — Joints, Cope & Return",level:"new",dur:"14 min",desc:"Inside corners: cope vs miter. Outside corners: miter sequence and angles. Returns at door casings. Scribing baseboard to uneven floors. Nailing height to avoid pipes.",vid:"GEeAcmhI-q4",
+      notes:["Cope inside corners — never miter inside corners. Miters open as wood moves; copes stay tight","Cope sequence: run the first piece square into the corner. Miter the second piece at 45°, then cope along the profile with a coping saw or oscillating tool","Outside corner miter: cut both pieces at 45°. Pre-drill and glue the joint. Drive finish nails through the face of both pieces — never rely on the miter alone","Scribe to floor: if the floor is uneven, use a compass to scribe the bottom of the baseboard to the floor profile, then cut and sand","Nail location: 1\" from the bottom (into the plate) and at mid-height (into the stud). Mark stud locations before starting — don't fish for studs while holding trim"]},
+    {id:"cf_2",title:"Door Casing — Reveal, Miter & Back Saw",level:"new",dur:"12 min",desc:"Setting the reveal (3/16\" to 1/4\" from inside edge of door frame), marking reveal with a combination square, mitering the head and side casings, back-cutting for tight miters, nailing sequence.",vid:"YCrCl43Rg3E",
+      notes:["Reveal: set your combination square to 3/16\" and scribe a light mark around the entire door frame — the casing aligns to this line, not the frame edge","Miter sequence: cut the head piece first with 45° miters on both ends. Then cut side pieces — mark from the reveal line, not the floor","Back-cut the miter: tilt the miter saw 1° past 45° on the back face. This ensures the outside point makes contact first — a flat miter gaps at the point","Nail the casing to the frame first (small nails, 18-gauge), then nail into the framing (15-gauge finish nails). This keeps the casing tight to the frame","Gaps at miter: add a thin bead of wood glue before nailing. If the gap is larger than 1/16\", recut — caulk and paint will not hide a bad miter"]},
+    {id:"cf_3",title:"Crown Molding — Spring Angle, Copes & Outside Corners",level:"refresher",dur:"18 min",desc:"Understanding spring angle (38° and 45° are most common), cutting crown flat on the saw table, inside corners (cope — never miter), outside corners (miter sequence), scribing to ceiling.",vid:"iFqerSRsHAE",
+      notes:["Spring angle: the angle at which crown sits against the wall and ceiling. 38/52 and 45/45 are the two most common — do NOT mix spring angles on the same room","Cutting crown FLAT: lay crown upside-down on the saw table with the ceiling edge against the fence and the wall edge on the table. This converts the spring angle math for you","Cope inside corners — every time, no exceptions. A mitered inside corner will open a visible gap within months as the wood moves","Outside corner: both pieces miter at 45°. This is the only time you DO miter crown. Undercut the miter by 1° so the face edge contacts first","If the ceiling is out of level: scribing crown is complex. Consider a flat paint caulk line at the ceiling — many professionals do this on out-of-level ceilings"]},
+    {id:"cf_4",title:"Hardwood Floor Installation — Layout, Nailing & Acclimation",level:"refresher",dur:"20 min",desc:"Acclimation requirements (3-7 days, 30-50% RH), layout line (never start parallel to a wall — snap a true line), underlayment, first row (face nail), racking, blind nailing with flooring nailer.",vid:"IwmcNbmtBfQ",
+      notes:["Acclimation is not optional — install hardwood before it has acclimated and it will either buckle (if too wet) or gap (if too dry)","Layout: snap a line 30\" from the longest straight wall. Start here — never trust a wall to be straight enough to start from","Moisture test the subfloor before installing: max 12% MC in the subfloor with a pin meter, or follow manufacturer spec","First two rows are face-nailed (nails covered by baseboard). All subsequent rows are blind-nailed through the tongue with a flooring nailer","Racking: stagger end joints at least 6\" between adjacent rows. Avoid H-joints (end joints lining up across two rows) — they are both weak and ugly","Expansion gap: leave 3/4\" gap at all walls and vertical obstructions. Hardwood expands across the grain — not along it — and it WILL expand"]},
+    {id:"cf_5",title:"Cabinet Installation — Level, Plumb & Scribe",level:"refresher",dur:"16 min",desc:"Finding the high point of the floor, establishing a level reference line, shimming base cabinets, scribing to walls, hanging wall cabinets with ledger board, fastener location.",vid:"RrxlG1m0EO0",
+      notes:["High point of floor: use a level or laser to find the highest point in the room. All cabinets reference from here — shim up from the high point, never down","Ledger board: a temporary level board screwed to the wall at the correct height for the bottom of upper cabinets. Saves you from holding cabinets while fastening — essential","Scribing: if a cabinet end meets a wall that is out of plumb, use a compass to scribe the profile onto a filler strip, cut and sand to fit — never force a cabinet out of plumb to meet a wall","Fasteners into studs: 2-1/2\" to 3\" screws through the cabinet rail into wall studs. Upper cabinets hold significant load — always hit studs","Shim base cabinets before installing doors and drawers — door gaps and drawer alignment are set by cabinet plumb, not by hardware adjustment"]},
+    {id:"cf_6",title:"Wood Finishing — Prep, Sand & Topcoat",level:"new",dur:"14 min",desc:"Sanding sequence (80→120→180 for paint; 80→120→150→180→220 for stain/oil), grain raising before waterborne finish, stain application and wiping, topcoat types (lacquer, polyurethane, oil), between-coat scuff sanding.",vid:"VYhS-dPTmb8",
+      notes:["Always sand with the grain — cross-grain scratches from 80 or 100-grit sand paper telegraph through stain and finish","Raise the grain before waterborne finish: wipe with damp cloth, let dry, sand with 220. Otherwise the first coat raises the grain and feels rough","Stain: apply liberally, let soak 3-5 min, wipe off the excess. The longer you leave it, the darker the color — but leaving too long causes uneven blotchiness","Between coats: scuff-sand with 320-grit or gray scotchbrite after each coat — just enough to knock off nibs, not to sand through","Lacquer vs polyurethane: lacquer dries fast (30 min recoat) and is easier to repair; polyurethane is harder and more water-resistant. Match finish to application"]},
+  ]},
+  {id:"c_fasteners",title:"Fasteners, Hardware & Structural Connectors",icon:"🔩",color:"#6a5828",lessons:[
+    {id:"cfa1",title:"Nail Types & When to Use Each",level:"new",dur:"10 min",desc:"Common nail anatomy (sinker, box, framing, finish, roofing), nail sizing (penny system — 8d, 16d), hot-dip galvanized vs stainless for exterior, pneumatic nail gun settings.",vid:"lWL0jZaePAs",
+      notes:["16d sinker (3-1/4\") is the standard framing nail. 8d (2-1/2\") for sheathing, 10d for LVL connections per spec","Hot-dip galvanized: required for ACQ pressure-treated lumber — bright nails corrode and fail within years in treated wood","Galvanic corrosion: never mix metals (aluminum nails in treated lumber, or stainless hardware with galvanized joist hangers) — one metal corrodes sacrificially","Pneumatic guns: set the depth so nails are flush — overdriven nails in sheathing reduce shear capacity; underdriven nails don't fully seat","Nail guns vs hand nailing: pneumatic guns drive faster but can bounce-fire. Keep finger off trigger until the gun is against the work"]},
+    {id:"cfa2",title:"Screws — Structural vs Fastening vs Trim",level:"new",dur:"10 min",desc:"Structural screws (Simpson Strong-Tie, GRK) vs drywall vs deck vs trim head screws, drive types (Phillips vs square vs Torx), pilot holes in hardwood, stripping and how to avoid it.",vid:"T9lC75KfbUE",
+      notes:["Drywall screws are NOT structural — they are brittle and snap in shear. Never use them for framing, ledger boards, or structural connections","Structural screws (GRK, Simpson SDS): rated for shear and tensile load. Can substitute for nails in many Simpson connector applications — check the load table","Pilot holes: always in hardwood and within 2\" of an end. Without a pilot hole you will split the wood or strip the screw","Torx (star drive) screws are worth the cost for finish work — Phillips strips under pressure; Torx doesn't","Deck screws: use stainless or coated (ACQ-rated) for exterior applications. Uncoated deck screws stain decks and fail in 3-5 years"]},
+    {id:"cfa3",title:"Simpson Strong-Tie Connectors — Joist Hangers, Post Bases & Straps",level:"refresher",dur:"14 min",desc:"Selecting the correct hanger for joist size and species, nailing requirements (must use all holes with correct nail type), post bases (standoff vs direct-bearing), tension ties and hurricane clips.",vid:"_p0LFgNvCJI",
+      notes:["Using any nail other than the specified connector nail (usually 10d × 1-1/2\" joist hanger nail) voids the load rating — do not use framing nails","All holes must be filled — leaving even one hole empty significantly reduces the connector's rated capacity","Post bases: standoff post bases keep the post bottom off concrete and away from moisture — critical in wet environments","Hurricane clips (H2.5, H10): connect rafter/truss to top plate. Required by code in high-wind regions; best practice everywhere","Never substitute a connector with one that 'looks similar' — load ratings vary enormously between similar-looking connectors. Verify the model number"]},
+    {id:"cfa4",title:"Adhesives — Construction, PL Premium & Epoxy",level:"new",dur:"10 min",desc:"Construction adhesive (PL Premium, Liquid Nails) for subfloor and framing, wood glue (PVA) for joinery, two-part epoxy for repair and end-grain gaps, expanding foam for insulation and air sealing.",vid:"aTUmnLYpzMk",
+      notes:["PL Premium is the professional standard for subfloor — it bonds green lumber, wet concrete, and treated wood that PVA glue won't adhere to","Wood glue (PVA): stronger than wood in long-grain to long-grain joints — a well-made glue joint will break the wood before the glue lets go","Epoxy for repair: mix accurately to the ratio. Off-ratio epoxy either stays tacky or is too brittle. Use it for end-grain sealing and rotted wood consolidation","Low-expansion foam for windows and doors. Standard expanding foam can exert enough pressure to bow a window frame and prevent operation","Subfloor adhesive: apply to the top of every joist in a continuous bead — don't spot-apply. If the panel goes down without glue, it will squeak forever"]},
+  ]},
+  {id:"c_advanced",title:"Advanced Carpentry & Jobsite Skills",icon:"🎯",color:"#5a4818",lessons:[
+    {id:"ca1",title:"Reading Construction Drawings — Plans, Sections & Details",level:"new",dur:"16 min",desc:"Plan view vs section vs elevation vs detail, title block, scale bar, symbol legend, dimensions (overall to sub-dimensions), how to find the detail that matters for your scope of work.",vid:"mFAGSEe4NWk",
+      notes:["Always read the title block first — sheet number, scale, revision date. An outdated revision is dangerous","Hierarchy: specifications override drawings; large-scale details override small-scale plans. When they conflict, ask the GC before proceeding","Dimensions: the overall dimension should equal the sum of the sub-dimensions. If they don't, there's an error — never guess, always ask for clarification","As-built drawings: mark your deviations from the plan on a set of drawings as you go. Future trades will need to know where you actually ran things","RFI (Request for Information): if anything on the plans is unclear or conflicts with site conditions, submit a written RFI before proceeding — verbal approvals don't protect you"]},
+    {id:"ca2",title:"Jobsite Math — Fractions, Area & Board Feet",level:"new",dur:"12 min",desc:"Adding and subtracting fractions (the core of carpentry math), converting between fractions and decimals, calculating square footage, estimating board feet of lumber for a project.",vid:"kIuMVU8tA5k",
+      notes:["Fractions in carpentry: always find a common denominator. 3/8\" + 9/16\" = 6/16\" + 9/16\" = 15/16\". Get this wrong and nothing fits","Board feet = (thickness in\" × width in\" × length in feet) ÷ 12. A 2×6×12' = 2 × 6 × 12 ÷ 12 = 12 board feet","Order lumber with 10-15% waste allowance for cutting and defects. More complex cuts (crown, hardwood floors) need 15-20% overage","Stair math: the most common jobsite calculation error. Work rise and run on paper before touching a framing square","Pythagorean theorem (3-4-5): to check a corner is square, measure 3' on one side, 4' on the other, and the diagonal should be exactly 5'. Scale up for larger layouts: 6-8-10 or 9-12-15"]},
+    {id:"ca3",title:"Moisture & Wood Movement — Why Carpentry Fails",level:"refresher",dur:"14 min",desc:"Equilibrium moisture content (EMC), how wood moves across the grain (and why it barely moves along it), calculating seasonal movement, designing for wood movement in floors, doors and furniture.",vid:"nxGXXNdVGAE",
+      notes:["Wood moves across the grain — a 12\" wide oak board can move 3/4\" seasonally in a dry climate. Design every joint to allow this movement","Along the grain: wood moves less than 1/100 of its cross-grain movement. This is why you can glue up a solid wood panel across the width","EMC: wood reaches equilibrium with the ambient RH. At 45% RH, wood stabilizes around 8% MC. At 75% RH, it's around 14% — 6% change = significant movement","Hardwood floors: the reason you need expansion gaps is seasonal movement. A floating floor with no gap will buckle — guaranteed","Exterior trim and doors: seal all 6 sides (including end grain) before installation. Unsealed end grain absorbs water 10x faster than face grain and causes premature paint failure"]},
+    {id:"ca4",title:"Jobsite Safety — Cut Hazards, Falls & Housekeeping",level:"new",dur:"12 min",desc:"Power tool safety hierarchy (PPE is last resort), eye and hearing protection requirements for each tool, fall protection thresholds (6' in construction), extension cord ratings, housekeeping and trip hazard prevention.",vid:"PwnLO8Vb6bA",
+      notes:["Safety hierarchy: eliminate the hazard first, then engineering controls, then PPE. A blade guard is engineering; safety glasses are PPE — both are required","Hearing protection: circular saws and routers cause permanent hearing loss with repeated exposure. Wear plugs or muffs every time — hearing doesn't grow back","Table saw injuries: the most dangerous stationary tool in the shop. Kickback launches material at 100+ mph. Always use the riving knife and blade guard","Fall protection: at 6' above ground (construction) or 4' above ground (general industry) fall protection is required — guardrails, harness, or safety net","Extension cords: use the correct AWG for the run length. A 100-foot 16AWG cord to a 15A tool drops voltage enough to burn out the motor. Use 12AWG for runs over 50 feet"]},
+    {id:"ca5",title:"Layout for Multiple Trades — Coordination & Backing",level:"refresher",dur:"14 min",desc:"Rough-in coordination with plumbing and electrical, installing backing in walls for future fixtures (grab bars, TV mounts, handrails), MEP penetrations in framing, fire blocking requirements.",vid:"pnfh2N5gCfM",
+      notes:["Backing for grab bars: 2x10 solid blocking between studs at 33-36\" AFF — install during framing, not after drywall","TV mount backing: a sheet of 3/4\" plywood behind drywall is the correct solution — metal stud framing cannot hold a TV mount in a standard stud bay","Fire blocking: required in framing cavities that exceed 10 feet in height or at floor-ceiling intersections in platform framing — horizontal 2x blocking","MEP coordination: mark all pipe and conduit locations on top plate before framing is covered. Future trades need to drill through your framing — tell them where the structural members are","ADA compliance: if the project is commercial or multifamily, confirm ADA requirements for door widths (32\" clear min), hardware height, and accessible route before framing"]},
+  ]},
+];
+
+
+// ═══════════════════════════════════════════════════════════
+// CARPENTRY QUIZZES
+// ═══════════════════════════════════════════════════════════
+const CARP_QUIZZES = [
+  {week:1,topic:"Measuring & Layout",questions:[
+    {q:"Why does the tape measure hook slide 1/16\" at the end?",opts:["It's a manufacturing defect","It self-adjusts for inside vs outside measurements — intentional design","It allows for metric conversion","It indicates the tape needs replacing"],a:1},
+    {q:"A story pole is used to:",opts:["Support ceiling drywall","Mark repetitive measurements faster and more accurately than measuring each piece","Check for level across long spans","Lay out roof rafters"],a:1},
+    {q:"'Crown up' when installing lumber means:",opts:["The crown faces the wall","Install the bow facing up so gravity and load push it flat over time","Crown faces the subfloor","Orientation doesn't matter for dimensional lumber"],a:1},
+    {q:"To check if a speed square is accurate after dropping it, you:",opts:["Compare it to a new speed square","Scribe a line, flip the square 180°, and scribe again — if lines match, it's accurate","Use a digital level","It cannot be field-checked"],a:1},
+    {q:"Chalk line snap technique for a clean thin line:",opts:["Snap with a full arm swing","Snap with a wrist motion — arm motion lifts the line and blurs it","Pull tight and release from one end","Use two people, one at each end"],a:1},
+  ]},
+  {week:2,topic:"Power Tools & Safety",questions:[
+    {q:"Circular saw blade depth should be set to:",opts:["Full blade depth for fastest cut","1/4\" below the material — minimum exposure reduces injury risk","Half the blade depth","Flush with the material bottom"],a:1},
+    {q:"Circular saw kickback is caused by:",opts:["Blade spinning too fast","Blade binding when the workpiece flexes and pinches the blade","Dull blade only","Too much depth of cut only"],a:1},
+    {q:"For inside corners on baseboards, the correct technique is:",opts:["Miter both pieces at 45°","Cope — run the first piece square to the corner, profile-cut the second piece to overlap it","Butt joint with caulk","45° miter with construction adhesive"],a:1},
+    {q:"Router feed direction (to avoid climb cuts):",opts:["Feed in the same direction as bit rotation","Feed against the bit rotation — climb cuts pull the router forward dangerously","Direction doesn't matter with a sharp bit","Climb cuts are always preferred for cleaner edges"],a:1},
+    {q:"Miter saw blade must reach full speed before the cut because:",opts:["It saves motor life","A slow start causes tearout and burning","Safety switch requires it","It's only required for bevel cuts"],a:1},
+  ]},
+  {week:3,topic:"Rough Framing",questions:[
+    {q:"A nominal 2x4 lumber's actual dimensions are:",opts:["2 inches × 4 inches","1-1/2 inches × 3-1/2 inches","1-3/4 inches × 3-3/4 inches","2 inches × 3-1/2 inches"],a:1},
+    {q:"The king stud in a framed opening:",opts:["Supports the header and runs from plate to header only","Runs full height from bottom to top plate — the jack stud (trimmer) is shorter and supports the header","Is optional in non-load-bearing walls","Is always doubled"],a:1},
+    {q:"Subfloor panels require 1/8\" expansion gap because:",opts:["Code requires it for inspection","OSB and plywood expand with humidity — without gap, panels buckle","It allows for leveling compound","For sound reduction only"],a:1},
+    {q:"Bird's mouth notch depth must not exceed:",opts:["1/4 of rafter depth","1/3 of rafter depth — deeper cuts weaken the rafter structurally","1/2 of rafter depth","Full depth is acceptable for low slopes"],a:1},
+    {q:"A ridge board in conventional rafter framing is:",opts:["A structural beam that carries roof load","NOT structural — the ceiling joists/rafter ties resist the outward thrust of the rafters","Only required in hip roofs","Must be the same width as the rafters"],a:1},
+  ]},
+  {week:4,topic:"Doors, Windows & Stairs",questions:[
+    {q:"When installing a prehung interior door, the first step after setting in the rough opening is:",opts:["Nail the latch side first","Shim and fasten the hinge side plumb first — every door installation starts here","Install the door stop","Hang the door on the hinges"],a:1},
+    {q:"Why should you never caulk the bottom of an exterior door frame?",opts:["It prevents the door from sealing","Water that infiltrates must be able to drain out — sealing the bottom traps water and causes rot","Caulk shrinks and cracks there","It's not required by code"],a:1},
+    {q:"IRC maximum riser height for stairs is:",opts:["6-1/2 inches","7 inches","7-3/4 inches","8-1/4 inches"],a:2},
+    {q:"The correct window flashing sequence (water management order) is:",opts:["Head first, then jambs, then sill","Jambs first, then head, then sill","Sill first, then jambs overlapping sill, then head over everything","Any order is acceptable if fully adhered"],a:2},
+    {q:"Variation between the tallest and shortest riser in a stair run must not exceed:",opts:["1/8 inch","3/8 inch","1/2 inch","No limit if the average is within code"],a:1},
+  ]},
+  {week:5,topic:"Finish Carpentry",questions:[
+    {q:"Inside corner trim joints should always be:",opts:["Mitered at 45°","Coped — mitered inside corners open as wood moves; copes stay tight","Butt joined and caulked","Biscuit joined"],a:1},
+    {q:"Door casing reveal is typically set at:",opts:["1/8 inch from inside edge of frame","3/16 to 1/4 inch from inside edge of door frame","1/2 inch from inside edge","Flush with the frame"],a:1},
+    {q:"Crown molding spring angle means:",opts:["The angle of the miter cut","The angle at which the molding sits against wall and ceiling — determines all cut angles","The bevel angle on the saw","The angle of the profile face"],a:1},
+    {q:"Hardwood floor acclimation is:",opts:["Optional if the wood is kiln-dried","Required — install before acclimation and the floor will buckle or gap seasonally","Only required for floors over 500 sq ft","Only required in humid climates"],a:1},
+    {q:"Cabinet base installation starts by finding:",opts:["The center of the room","The high point of the floor — all cabinets reference from here","The most visible wall","A plumb wall to start from"],a:1},
+  ]},
+  {week:6,topic:"Fasteners & Connectors",questions:[
+    {q:"Drywall screws in structural framing applications are:",opts:["Acceptable for light loads","NOT acceptable — drywall screws are brittle and fail in shear","Better than nails for most framing","Required by code in some applications"],a:1},
+    {q:"Simpson Strong-Tie connectors require:",opts:["Only the corner holes to be filled","All holes filled with the specified nail type — leaving any hole empty reduces the rated capacity","Any available nail that fits","Only half the holes for normal loads"],a:1},
+    {q:"Hot-dip galvanized nails are required when:",opts:["Nailing within 2 feet of exterior","Fastening ACQ (pressure-treated) lumber — bright nails corrode and fail in treated wood","Working in humid climates only","Nailing galvanized metal connectors"],a:1},
+    {q:"Low-expansion foam is specified for windows and doors because:",opts:["It's cheaper","Standard expanding foam exerts enough pressure to bow the frame and prevent operation","It cures faster","Low-expansion has better R-value"],a:1},
+    {q:"A pilot hole is required when screwing within 2\" of the end of a board because:",opts:["Code requires it","Without a pilot hole, the board will split or the screw will strip","Screws hold better with pilot holes","It prevents the screw from spinning"],a:1},
+  ]},
+  {week:7,topic:"Wood Movement & Moisture",questions:[
+    {q:"Wood moves primarily:",opts:["Along the grain (lengthwise)","Across the grain (tangentially/radially) — lengthwise movement is negligible","Equally in all directions","Only when green, not after drying"],a:1},
+    {q:"Hardwood floor expansion gaps at walls are required because:",opts:["They allow for easier removal","Hardwood expands across the grain seasonally — without gaps, the floor will buckle","It's a fire code requirement","They allow subfloor moisture to escape"],a:1},
+    {q:"Sealing all 6 sides of exterior trim before installation prevents:",opts:["Insect damage","End grain moisture absorption — unsealed end grain absorbs water 10x faster than face grain causing premature paint failure","UV damage","Warping from sunlight"],a:1},
+    {q:"Equilibrium moisture content (EMC) means:",opts:["The ideal moisture content for all wood species","Wood reaches a stable moisture content in equilibrium with the ambient humidity of its environment","The moisture content at which wood is considered dry","The average MC across a board"],a:1},
+    {q:"The 3-4-5 method on a jobsite is used to:",opts:["Calculate rafter length","Verify a corner is square — 3' on one leg, 4' on the other, diagonal should be exactly 5'","Estimate material quantities","Check floor levelness"],a:1},
+  ]},
+  {week:8,topic:"Mixed Review",questions:[
+    {q:"The correct order to install subfloor sheathing:",opts:["Nail only, no adhesive needed","Apply construction adhesive on every joist in a continuous bead, then nail — this permanently eliminates squeaks","Nail first, then apply adhesive at edges","Glue edges only, nail field"],a:1},
+    {q:"Fire blocking in wall framing cavities is required when:",opts:["Any wall exceeds 8 feet","Framing cavities exceed 10 feet in height or at floor-ceiling intersections","Only in commercial construction","Only in exterior walls"],a:1},
+    {q:"LVL I-joist flanges must never be:",opts:["Used without squash blocks at point loads","Notched or drilled — the flanges are the structural element; web holes must follow manufacturer's chart","Used in floor framing longer than 20 feet","Installed crown-up"],a:1},
+    {q:"APA sheathing rating 32/16 means:",opts:["32 pounds per square foot load, 16-inch span","Rated for 32\" rafter spacing OR 16\" floor joist spacing","32 inches wide, 16 feet long","32-foot roof span, 16-foot floor span"],a:1},
+    {q:"When shimming base cabinets to level, you should:",opts:["Shim after installing doors and drawers to use them as reference","Shim and level the cabinet boxes before installing doors or drawers — alignment depends on cabinet plumb","Adjust door hinges to compensate for unlevel cabinets","Install doors first, then shim to the door gap"],a:1},
+  ]},
+];
+
+const TRADE_CONFIG = {
+  plumb:{icon:'🔧',label:'FM&O Plumbing Training',modules:PLUMB_MODULES,quizzes:PLUMB_QUIZZES,noteIcon:'📋 Technical Notes'},
+  auto: {icon:'🔩',label:'Auto Mechanic Training',modules:AUTO_MODULES,quizzes:AUTO_QUIZZES,noteIcon:'🔩 Shop Notes'},
+  elec: {icon:'⚡',label:'Electrical Training',modules:ELEC_MODULES,quizzes:ELEC_QUIZZES,noteIcon:'⚡ Electrical Notes'},
+  niag: {icon:'🖥️',label:'Tridium Niagara Training',modules:NIAG_MODULES,quizzes:NIAG_QUIZZES,noteIcon:'🖥️ Niagara Notes'},
+  carp: {icon:'🪵',label:'Carpentry Training',modules:CARP_MODULES,quizzes:CARP_QUIZZES,noteIcon:'🪵 Carpenter Notes'},
+};
+
+let trade = 'plumb';
+let MODULES = PLUMB_MODULES;
+let QUIZZES = PLUMB_QUIZZES;
+
+const DEFAULT_PROG = '{"plumb":{"done":[],"quiz":[]},"auto":{"done":[],"quiz":[]},"elec":{"done":[],"quiz":[]},"niag":{"done":[],"quiz":[]},"carp":{"done":[],"quiz":[]}}';
+let allProg = JSON.parse(localStorage.getItem('ts4_prog') || DEFAULT_PROG);
+['plumb','auto','elec','niag','carp'].forEach(k=>{ if(!allProg[k]) allProg[k]={done:[],quiz:[]}; });
+let prog = allProg[trade];
+let lvl='all', openMod=null, qAns={}, qSub=false, curLesson=null;
+
+function save(){ allProg[trade]=prog; localStorage.setItem('ts4_prog',JSON.stringify(allProg)); }
+
+function switchTrade(t){
+  trade=t;
+  const cfg=TRADE_CONFIG[t];
+  MODULES=cfg.modules; QUIZZES=cfg.quizzes;
+  prog=allProg[t];
+  openMod=null; qAns={}; qSub=false; curLesson=null;
+  document.body.className=t;
+  document.getElementById('header-icon').textContent=cfg.icon;
+  document.getElementById('header-sub').textContent=cfg.label;
+  ['plumb','auto','elec','niag','carp'].forEach(k=>{
+    document.getElementById('btn-'+k).classList.toggle('active',k===t);
+  });
+  const at=document.querySelector('.tab.active').id.replace('tab-','');
+  ({home:renderHome,learn:renderLearn,quiz:renderQuiz,progress:renderProgress}[at])();
+}
+
+function dayOfYear(){ const n=new Date(); return Math.floor((n-new Date(n.getFullYear(),0,0))/86400000); }
+function weekNum(){ const n=new Date(),s=new Date(n.getFullYear(),0,1); return Math.ceil(((n-s)/86400000+s.getDay()+1)/7); }
+function dailyLesson(){ const a=MODULES.flatMap(m=>m.lessons); return a[dayOfYear()%a.length]; }
+function getQuiz(w){ return QUIZZES[(w-1)%QUIZZES.length]; }
+function lessonById(id){ return MODULES.flatMap(m=>m.lessons).find(l=>l.id===id); }
+
+function showTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  ({home:renderHome,learn:renderLearn,quiz:renderQuiz,progress:renderProgress}[name])();
+}
+
+// ── MODAL ──────────────────────────────────────────────────
+function openLesson(id){
+  curLesson=lessonById(id); if(!curLesson) return;
+  document.getElementById('modal-title').textContent=curLesson.title;
+  document.getElementById('modal-dur').textContent='⏱ '+curLesson.dur;
+  document.getElementById('modal-desc').textContent=curLesson.desc;
+  const lc=curLesson.level==='new'?'#7bc47f':'#4a9eca';
+  document.getElementById('modal-badge').innerHTML=`<span class="modal-badge" style="background:${lc}22;color:${lc};border:1px solid ${lc}44">${curLesson.level==='new'?'FOUNDATIONAL':'EXPERIENCED'}</span>`;
+  const notesEl=document.getElementById('modal-notes');
+  const noteIcon=TRADE_CONFIG[trade].noteIcon;
+  if(curLesson.notes&&curLesson.notes.length){
+    notesEl.style.display='block';
+    notesEl.innerHTML=`<div class="modal-notes-title">${noteIcon}</div><div class="modal-notes-body"><ul>${curLesson.notes.map(n=>`<li>${n}</li>`).join('')}</ul></div>`;
+  } else { notesEl.style.display='none'; }
+  const ytBtn=document.getElementById('yt-link');
+  const noVid=document.getElementById('no-video');
+  if(curLesson.vid){ ytBtn.style.display='block'; ytBtn.href='https://www.youtube.com/watch?v='+curLesson.vid; noVid.style.display='none'; }
+  else { ytBtn.style.display='none'; noVid.style.display='block'; }
+  updateMarkBtn();
+  document.getElementById('modal').classList.add('open');
+  document.querySelector('.modal-inner').scrollTop=0;
+}
+function updateMarkBtn(){
+  if(!curLesson) return;
+  const done=prog.done.includes(curLesson.id);
+  const mb=document.getElementById('mark-btn');
+  mb.textContent=done?'✓  MARKED COMPLETE':'✓  MARK AS COMPLETE';
+  mb.className=done?'mark-btn done':'mark-btn';
+}
+function markDone(){
+  if(curLesson&&!prog.done.includes(curLesson.id)){ prog.done.push(curLesson.id); save(); updateMarkBtn(); }
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  const at=document.querySelector('.tab.active').id.replace('tab-','');
+  ({home:renderHome,learn:renderLearn,progress:renderProgress}[at]||function(){})();
+}
+document.getElementById('modal').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
+
+// ── HOME ──────────────────────────────────────────────────
+function renderHome(){
+  const d=dailyLesson();
+  const m=MODULES.find(x=>x.lessons.some(l=>l.id===d.id));
+  const tot=MODULES.flatMap(x=>x.lessons).length, dn=prog.done.length, wk=weekNum();
+  const dt=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  const trades=['plumb','auto','elec','niag','carp'];
+  const tC={plumb:'#4a9eca',auto:'#e05c1a',elec:'#f0d030',niag:'#30c8a0',carp:'#c87941'};
+  const tI={plumb:'🔧',auto:'🔩',elec:'⚡',niag:'🖥️',carp:'🪵'};
+  const tL={plumb:'Pipe',auto:'Grease',elec:'Electric',niag:'Niagara',carp:'Carpentry'};
+  const grandDone=trades.reduce((s,k)=>s+allProg[k].done.length,0);
+  const grandTot=trades.reduce((s,k)=>s+TRADE_CONFIG[k].modules.flatMap(m=>m.lessons).length,0);
+
+  let tiles='';
+  trades.forEach(k=>{
+    const kD=allProg[k].done.length, kT=TRADE_CONFIG[k].modules.flatMap(m=>m.lessons).length;
+    tiles+=`<div style="border-radius:8px;padding:10px;text-align:center;background:${tC[k]}11;border:1px solid ${tC[k]}33;cursor:pointer" onclick="switchTrade('${k}')">
+      <div style="font-size:14px">${tI[k]}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:${tC[k]}">${kD}/${kT}</div>
+      <div style="font-size:9px;color:#555;letter-spacing:1px;text-transform:uppercase">${tL[k]}</div>
+    </div>`;
+  });
+
+  let h=`<div style="background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:16px;margin-bottom:12px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:#444;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">All 4 Trades — Combined Progress</div>
+    <div style="background:#222;border-radius:4px;height:8px;overflow:hidden"><div style="height:100%;border-radius:4px;width:${Math.round(grandDone/grandTot*100)}%;background:linear-gradient(90deg,#4a9eca,#f0d030,#e05c1a,#30c8a0)"></div></div>
+    <div style="color:#666;font-size:11px;margin-top:6px">${grandDone} of ${grandTot} lessons across all trades</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-top:10px">${tiles}</div>
+  </div>
+  <div class="card"><div class="card-hdr"><div class="daily-meta">TODAY'S LESSON · ${TRADE_CONFIG[trade].icon}</div><div style="font-size:11px;color:#555">${dt}</div></div>
+  <div class="daily-inner">
+    <button class="play-btn" onclick="openLesson('${d.id}')">▶</button>
+    <div style="flex:1">
+      <div class="daily-title">${d.title}</div>
+      <div class="daily-sub">${d.dur} · ${m?m.title:''}</div>
+      <div class="daily-desc">${d.desc}</div>
+      <button class="btn-open" onclick="openLesson('${d.id}')">OPEN LESSON</button>
+    </div>
+  </div></div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-val" style="color:#7bc47f">${dn}/${tot}</div><div class="stat-lbl">This Trade</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--accent)">${prog.quiz.length}</div><div class="stat-lbl">Quizzes Passed</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:#4a9eca">Wk ${wk}</div><div class="stat-lbl">This Week</div></div>
+  </div>
+  <div class="sec-lbl">Training Modules</div><div class="mod-grid">`;
+  MODULES.forEach(mod=>{
+    const d2=mod.lessons.filter(l=>prog.done.includes(l.id)).length;
+    h+=`<div class="mod-card" onclick="goLearn('${mod.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:20px">${mod.icon}</span>
+        <span style="color:${mod.color};font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700">${d2}/${mod.lessons.length}</span>
+      </div>
+      <div class="mod-card-title">${mod.title}</div>
+      <div class="prog-bar-bg"><div class="prog-bar" style="width:${Math.round(d2/mod.lessons.length*100)}%;background:${mod.color}"></div></div>
+    </div>`;
+  });
+  h+='</div>';
+  document.getElementById('tab-home').innerHTML=h;
+}
+function goLearn(id){ openMod=id; showTab('learn',document.querySelectorAll('.nav-btn')[1]); }
+
+// ── LEARN ──────────────────────────────────────────────────
+function renderLearn(){
+  let h=`<div class="filter-row"><span class="filter-lbl">Level:</span>
+    <button class="filter-btn ${lvl==='all'?'active':''}" onclick="setLvl('all')">ALL</button>
+    <button class="filter-btn ${lvl==='new'?'active':''}" onclick="setLvl('new')">FOUNDATIONAL</button>
+    <button class="filter-btn ${lvl==='refresher'?'active':''}" onclick="setLvl('refresher')">EXPERIENCED</button>
+  </div>`;
+  MODULES.forEach(mod=>{
+    const ls=mod.lessons.filter(l=>lvl==='all'||l.level===lvl);
+    if(!ls.length) return;
+    const dn=ls.filter(l=>prog.done.includes(l.id)).length, op=openMod===mod.id;
+    h+=`<div class="mod-hdr ${op?'open':''}" onclick="togMod('${mod.id}')" style="border-color:${op?mod.color+'55':'#2a2a2a'}">
+      <span style="font-size:18px">${mod.icon}</span>
+      <span class="mod-hdr-title">${mod.title}</span>
+      <span style="color:${mod.color};font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700">${dn}/${ls.length}</span>
+      <span style="color:#555;font-size:14px">${op?'▲':'▼'}</span>
+    </div>`;
+    if(op){
+      h+=`<div class="lesson-list" style="border-color:${mod.color}33">`;
+      ls.forEach(l=>{
+        const c=prog.done.includes(l.id), lc=l.level==='new'?'#7bc47f':'#4a9eca';
+        const hasN=l.notes&&l.notes.length;
+        h+=`<div class="lesson-card" onclick="openLesson('${l.id}')">
+          <div class="lcheck" style="background:${c?mod.color:'#2a2a2a'};color:${c?'#111':mod.color};border-color:${mod.color}44">${c?'✓':'▶'}</div>
+          <div style="flex:1">
+            <div class="ltitle">${l.title}</div>
+            <div class="lmeta">${l.dur} · <span style="color:${lc}">${l.level==='new'?'Foundational':'Experienced'}</span>${hasN?' · <span style="color:var(--notes-color)">📋 Notes</span>':''}</div>
+            <div class="ldesc">${l.desc.slice(0,110)}…</div>
+          </div>
+        </div>`;
+      });
+      h+='</div>';
+    }
+  });
+  document.getElementById('tab-learn').innerHTML=h;
+}
+function setLvl(f){ lvl=f; renderLearn(); }
+function togMod(id){ openMod=openMod===id?null:id; renderLearn(); }
+
+// ── QUIZ ──────────────────────────────────────────────────
+function renderQuiz(){
+  const wk=weekNum(), quiz=getQuiz(wk), done=prog.quiz.includes(wk);
+  let h=`<div class="card" style="margin-bottom:12px"><div style="padding:14px 16px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:#555;letter-spacing:2px;text-transform:uppercase">Weekly Quiz · ${TRADE_CONFIG[trade].icon} ${TRADE_CONFIG[trade].label}</div>
+    <div style="color:#aaa;font-size:13px;margin-top:4px">8 rotating topics · New quiz every week · Pass = 3 of 5</div>
+  </div></div>`;
+  if(done&&!qSub){
+    h+=`<div style="background:#1a2a1a;border:1px solid #4a7a4a;border-radius:10px;padding:20px;text-align:center;margin-bottom:12px">
+      <div style="font-size:32px">✅</div>
+      <div style="color:#7bc47f;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;margin-top:8px">Week ${wk} Complete!</div>
+      <div style="color:#666;font-size:13px;margin-top:4px">New quiz posts next week.</div></div>`;
+  } else {
+    h+=`<div class="card"><div class="quiz-hdr"><div class="quiz-title">WEEK ${wk} — ${quiz.topic.toUpperCase()}</div><div class="quiz-sub">5 questions · Pass = 3 of 5 correct</div></div><div class="quiz-body">`;
+    quiz.questions.forEach((q,qi)=>{
+      h+=`<div><div class="q-text">${qi+1}. ${q.q}</div>`;
+      q.opts.forEach((o,oi)=>{
+        let c='q-opt';
+        if(qSub){ if(oi===q.a) c+=' correct'; else if(qAns[qi]===oi) c+=' wrong'; }
+        else if(qAns[qi]===oi) c+=' sel';
+        h+=`<div class="${c}" onclick="${qSub?'':'selAns('+qi+','+oi+')'}">${o}</div>`;
+      });
+      h+='</div>';
+    });
+    const allDone=Object.keys(qAns).length>=quiz.questions.length;
+    if(!qSub){ h+=`<button class="sub-btn" ${allDone?'':'disabled'} onclick="subQuiz()">SUBMIT ANSWERS</button>`; }
+    else {
+      const sc=quiz.questions.filter((q,i)=>qAns[i]===q.a).length, pass=sc>=3;
+      h+=`<div class="result-box" style="background:${pass?'#1a2a1a':'#2a1a1a'}">
+        <div style="font-size:28px">${pass?'✅':'🔄'}</div>
+        <div class="result-txt" style="color:${pass?'#7bc47f':'var(--accent)'}">${sc}/5 — ${pass?'PASSED':'REVIEW & RETRY NEXT WEEK'}</div>
+      </div>`;
+    }
+    h+=`</div></div>`;
+  }
+  if(wk>1){
+    h+=`<div class="sec-lbl" style="margin-top:4px">Previous Weeks</div>`;
+    for(let w=wk-1;w>=Math.max(1,wk-6);w--){
+      const pq=getQuiz(w),pd=prog.quiz.includes(w);
+      h+=`<div class="past-q">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#ccc">Week ${w} — ${pq.topic}</div>
+        <span class="badge" style="background:${pd?'#7bc47f22':'#33333322'};color:${pd?'#7bc47f':'#888'};border-color:${pd?'#7bc47f55':'#44444455'}">${pd?'PASSED':'MISSED'}</span>
+      </div>`;
+    }
+  }
+  document.getElementById('tab-quiz').innerHTML=h;
+}
+function selAns(qi,oi){ qAns[qi]=oi; renderQuiz(); }
+function subQuiz(){
+  qSub=true;
+  const wk=weekNum(),quiz=getQuiz(wk),sc=quiz.questions.filter((q,i)=>qAns[i]===q.a).length;
+  if(sc>=3&&!prog.quiz.includes(wk)){ prog.quiz.push(wk); save(); }
+  renderQuiz();
+}
+
+// ── PROGRESS ──────────────────────────────────────────────
+function renderProgress(){
+  const tot=MODULES.flatMap(m=>m.lessons).length, dn=prog.done.length, pct=Math.round(dn/tot*100);
+  const trades=['plumb','auto','elec','niag','carp'];
+  const tC={plumb:'#4a9eca',auto:'#e05c1a',elec:'#f0d030',niag:'#30c8a0',carp:'#c87941'};
+  const tI={plumb:'🔧',auto:'🔩',elec:'⚡',niag:'🖥️',carp:'🪵'};
+  const tL={plumb:'Pipe School',auto:'Grease School',elec:'Electric School',niag:'Niagara',carp:'Carpentry'};
+  const grandDone=trades.reduce((s,k)=>s+allProg[k].done.length,0);
+  const grandTot=trades.reduce((s,k)=>s+TRADE_CONFIG[k].modules.flatMap(m=>m.lessons).length,0);
+
+  let tiles='';
+  trades.forEach(k=>{
+    const kD=allProg[k].done.length,kT=TRADE_CONFIG[k].modules.flatMap(m=>m.lessons).length;
+    tiles+=`<div style="border-radius:8px;padding:10px;text-align:center;background:${tC[k]}11;border:1px solid ${tC[k]}33;cursor:pointer" onclick="switchTrade('${k}')">
+      <div style="font-size:14px">${tI[k]}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:${tC[k]}">${kD}/${kT}</div>
+      <div style="font-size:9px;color:#555;letter-spacing:1px;text-transform:uppercase">${tL[k]}</div>
+      <div style="font-size:9px;color:#555;margin-top:2px">${allProg[k].quiz.length} quizzes passed</div>
+    </div>`;
+  });
+
+  let h=`<div style="background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:16px;margin-bottom:12px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:#444;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">All 4 Trades — Total Progress</div>
+    <div style="background:#222;border-radius:4px;height:8px;overflow:hidden"><div style="height:100%;border-radius:4px;width:${Math.round(grandDone/grandTot*100)}%;background:linear-gradient(90deg,#4a9eca,#f0d030,#e05c1a,#30c8a0)"></div></div>
+    <div style="color:#666;font-size:11px;margin-top:6px">${grandDone} of ${grandTot} total lessons · ${Math.round(grandDone/grandTot*100)}%</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-top:10px">${tiles}</div>
+  </div>
+  <div style="background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:18px;margin-bottom:12px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--accent)">${TRADE_CONFIG[trade].icon} ${TRADE_CONFIG[trade].label}</div>
+    <div style="background:#222;border-radius:4px;height:10px;margin-top:12px;overflow:hidden"><div style="height:100%;border-radius:4px;width:${pct}%;background:var(--accent);transition:width 0.4s"></div></div>
+    <div style="color:#888;font-size:13px;margin-top:8px">${dn} of ${tot} lessons complete — ${pct}%</div>
+  </div>`;
+
+  MODULES.forEach(mod=>{
+    const d=mod.lessons.filter(l=>prog.done.includes(l.id)).length, p=Math.round(d/mod.lessons.length*100);
+    h+=`<div style="background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:#ddd">${mod.icon} ${mod.title}</div>
+        <span style="color:${mod.color};font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700">${d}/${mod.lessons.length}</span>
+      </div>
+      <div style="background:#222;border-radius:4px;height:5px;margin-top:10px;overflow:hidden"><div style="height:100%;border-radius:4px;width:${p}%;background:${mod.color};transition:width 0.4s"></div></div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px">`;
+    mod.lessons.forEach(l=>{
+      const c=prog.done.includes(l.id);
+      h+=`<span onclick="openLesson('${l.id}')" style="padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;border:1px solid ${c?mod.color+'55':'#333'};background:${c?mod.color+'22':'#222'};color:${c?mod.color:'#555'};cursor:pointer">${l.title.split(/[-–:]/)[0].trim().slice(0,20)}</span>`;
+    });
+    h+=`</div></div>`;
+  });
+
+  h+=`<button onclick="resetTrade()" style="background:none;border:1px solid #444;border-radius:8px;padding:12px;color:#666;font-size:13px;cursor:pointer;width:100%;margin-top:6px">Reset ${TRADE_CONFIG[trade].label} Progress</button>
+      <button onclick="resetAll()" style="background:none;border:1px solid #5a1a1a;border-radius:8px;padding:12px;color:#8a4444;font-size:13px;cursor:pointer;width:100%;margin-top:6px">⚠ Reset ALL Progress — All 4 Trades</button>`;
+  document.getElementById('tab-progress').innerHTML=h;
+}
+function resetTrade(){
+  if(confirm('Reset '+TRADE_CONFIG[trade].label+' progress?')){
+    allProg[trade]={done:[],quiz:[]}; prog=allProg[trade]; qAns={}; qSub=false; save(); renderProgress();
+  }
+}
+function resetAll(){
+  if(confirm('Reset ALL progress for ALL 4 trades? Cannot be undone.')){
+    allProg={plumb:{done:[],quiz:[]},auto:{done:[],quiz:[]},elec:{done:[],quiz:[]},niag:{done:[],quiz:[]},carp:{done:[],quiz:[]}};
+    prog=allProg[trade]; qAns={}; qSub=false; save(); renderProgress();
+  }
+}
+
+renderHome();
+</script>
+</body>
+</html>
